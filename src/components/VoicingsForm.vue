@@ -1,8 +1,9 @@
 <template>
   <b-container>
     <b-row>
-      <b-col v-for="voice in voices" :key="voice.id" sm="3">
+      <b-col v-for="voice in voiceInputs" :key="voice.id" sm="3">
         <VoiceInput
+          :id="voice.id"
           :label="voice.label"
           :begin-note="voice.beginNote"
           :end-note="voice.endNote"
@@ -24,7 +25,7 @@ export default {
 
   data() {
     return {
-      voices: [
+      voiceInputs: [
         {
           id: 0,
           name: 'soprano',
@@ -56,6 +57,17 @@ export default {
       ]
     }
   },
+
+  computed: {
+    voices: function() {
+      return [
+        this.$store.getters.getCurSoprano,
+        this.$store.getters.getCurAlto,
+        this.$store.getters.getCurTenor,
+        this.$store.getters.getCurBass
+        ]
+    }
+  }
 
 }
 </script>

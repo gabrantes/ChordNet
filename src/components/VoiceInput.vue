@@ -16,6 +16,10 @@
 <script>
 export default {
   props: {
+    id: {
+      type: Number,
+      required: true,
+    },
     name: String,
     label: String,
     beginNote: {
@@ -64,7 +68,9 @@ export default {
   
   computed: {
     note: function() {
-      return this.convertValToInt(this.val);
+      const note = this.convertValToInt(this.val);
+      this.$store.dispatch("setCurNote", {"id": this.id, "val": this.val, "note": note})
+      return note;
     },
 
     withinRange: function() {

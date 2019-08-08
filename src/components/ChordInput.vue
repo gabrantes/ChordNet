@@ -8,6 +8,8 @@
           :category="category"
           :begin-note="voice.beginNote"
           :end-note="voice.endNote"
+          :error-state="errorArr[voice.id]"
+          @set:note="setVoice"
         />
       </b-col>
     </b-row>
@@ -58,17 +60,45 @@ export default {
           beginNote: 'E2',
           endNote: 'C4',
         }
+      ],
+      voices: [
+        {
+          id: 0,
+          val: null,
+          note: null,
+          withinRange: null,
+        },
+        {
+          id: 1,
+          val: null,
+          note: null,
+          withinRange: null,
+        },
+        {
+          id: 2,
+          val: null,
+          note: null,
+          withinRange: null,
+        },
+        {
+          id: 3,
+          val: null,
+          note: null,
+          withinRange: null,
+        },
       ]
     }
   },
 
-  computed: {
-    voices: function() {
-      if (this.category === "currentVoices")
-        return this.$store.getters.getCurrentVoices;
-      return null
-    },
+  methods: {
+    setVoice: function(emitted) {
+      this.voices[emitted.id].val = emitted.val
+      this.voices[emitted.id].note = emitted.note
+      this.voices[emitted.id].withinRange = emitted.withinRange
+    }
+  },
 
+  computed: {
     allEntered: function () {
       let allEntered = this.voices.reduce(
         (acc, voice) => acc && (voice.note || voice.note === 0), true
@@ -144,8 +174,6 @@ export default {
           return err
         }
       )
-
-      this.$store.dispatch("setCurError", errorArr)
       return errorArr
     },
 

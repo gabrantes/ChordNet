@@ -37,6 +37,10 @@ export default {
       type: String,
       required: true,
     },
+
+    errorState: {
+      type: Boolean,
+    }
   },
 
   data() {
@@ -74,7 +78,7 @@ export default {
   },
   
   computed: {
-    note: function() {         
+    note: function() {
       return this.convertValToInt(this.val);
     },
 
@@ -82,12 +86,10 @@ export default {
       if (this.note || this.note === 0) {
         const withinRange = (this.note >= this.beginInt) && (this.note <= this.endInt);
 
-        if (this.category === "currentVoices") {
-          this.$store.dispatch(
-            "setCurNote", 
-            {"id": this.id, "val": this.val, "note": this.note, "withinRange": withinRange}
-          )
-        }
+        this.$emit(
+          "set:note", 
+          {"id": this.id, "val": this.val, "note": this.note, "withinRange": withinRange}
+        )  
       
         return withinRange;
       } else {
@@ -96,11 +98,10 @@ export default {
     },
 
     inputState: function() {
-      const err = this.$store.getters.getVoiceError(this.id)
-      if (err === null)
-        return null
+      if (this.val && this.errorState !== null)
+        return !this.errorState
       else
-        return !err
+        return null
     }
   }
 

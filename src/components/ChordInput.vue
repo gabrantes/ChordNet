@@ -9,7 +9,6 @@
           :begin-note="voice.beginNote"
           :end-note="voice.endNote"
         />
-        <!-- TODO: Change category prop from hard-coded to a prop in VoicingsForm -->
       </b-col>
     </b-row>
   </b-container>
@@ -39,25 +38,25 @@ export default {
           id: 0,
           label: 'Soprano',
           beginNote: 'C4',
-          endNote: 'G5'
+          endNote: 'G5',
         },
         {
           id: 1,
           label: 'Alto',
           beginNote: 'G3',
-          endNote: 'D5'
+          endNote: 'D5',
         },
         {
           id: 2,
           label: 'Tenor',
           beginNote: 'C3',
-          endNote: 'G4'
+          endNote: 'G4',
         },
         {
           id: 3,
           label: 'Bass',
           beginNote: 'E2',
-          endNote: 'C4'
+          endNote: 'C4',
         }
       ]
     }
@@ -71,10 +70,10 @@ export default {
     },
 
     allEntered: function () {
-      const allEntered = this.voices.reduce(
+      let allEntered = this.voices.reduce(
         (acc, voice) => acc && (voice.note || voice.note === 0), true
       )
-      return allEntered
+      return Boolean(allEntered)
     },
 
     allWithinRange: function() {
@@ -85,23 +84,75 @@ export default {
       return allWithinRange;
     },
 
-    voiceOverlap: function() {
-      if (!this.allEntered) return null
-      const voiceOverlap = this.voices.reduce(
-        (acc, voice, idx, arr) => {
-          if (idx < 3) {
-            return acc || (voice.note < arr[idx + 1].note)
-          } else {
-            return acc
+    voiceOverlapArr: function() {
+      if (!this.allEntered) return [null, null, null, null]
+
+      let arr = [false, false, false, false]
+      for (let i = 0; i < 4; ++i) {
+        if (i < 3) {
+          if (this.voices[i].note < this.voices[i+1].note) {
+            arr[i] = true
+            arr[i+1] = true
           }
-        }, false
+        } else {
+          if (this.voices[i].note > this.voices[i-1].note) {
+            arr[i] = true
+            arr[i-1] = true
+          }
+        }
+      }
+
+      return arr
+    },
+
+    voiceOverlap: function() {
+      const voiceOverlap = this.voiceOverlapArr.reduce(
+        (acc, overlap) => acc || overlap, false
       )
       return voiceOverlap
     },    
 
+    spacingErrorArr: function() {
+      if (!this.allEntered) return [null, null, null]
+
+      let arr = [false, false, false]
+      for (let i = 0; i < 2; ++i) {
+        if (this.voices[i].note - this.voices[i+1].note > 12) {
+          arr[i] = true
+          arr[i+1] = true
+        }
+      }
+
+      return arr
+    },
+
+    spacingError: function() {
+      const spacingError = this.spacingErrorArr.reduce(
+        (acc, spacing) => acc || spacing, false
+      )
+      return spacingError
+    },
+
+    errorArr: function() {
+      if (!this.allEntered) return [null, null, null, null]
+
+      let errorArr = this.voiceOverlapArr
+      errorArr = errorArr.map(
+        (err, idx) => {
+          if (idx < this.spacingErrorArr.length)
+            return (err || this.spacingErrorArr[idx])
+          return err
+        }
+      )
+
+      this.$store.dispatch("setCurError", errorArr)
+      return errorArr
+    },
+
     isValid: function() {
       if (!this.allEntered) return null
-      return (this.allWithinRange && !this.voiceOverlap)
+      
+      return (this.allWithinRange && !this.voiceOverlap && !this.spacingError)
     },
   }
 

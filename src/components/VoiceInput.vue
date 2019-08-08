@@ -3,7 +3,7 @@
     <label v-if="label">{{ label }}</label>
     <b-form-input 
       v-model="val"
-      :state="withinRange"
+      :state="inputState"
     />
     <div v-if="withinRange === false">
       <p>Note out of range.</p>
@@ -36,7 +36,7 @@ export default {
     endNote: {
       type: String,
       required: true,
-    }
+    },
   },
 
   data() {
@@ -94,6 +94,16 @@ export default {
         return null;
       }
     },
+
+    inputState: function() {
+      const err = this.$store.getters.getVoiceError(this.id)
+      if (this.note) {
+        if (err === null) return null
+        else return !err
+      } else {
+        return null
+      }
+    }
   }
 
 }

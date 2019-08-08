@@ -1,35 +1,43 @@
 <template>
   <div>
-    <b-form-input v-model="val"></b-form-input>
+    <label v-if="label">{{ label }}</label>
+    <b-form-input 
+      v-model="val"
+      :state="withinRange"
+    />
+    <div v-if="withinRange === false">
+      <p>Note out of range.</p>
+      <p>Range is between {{ beginNote }} and {{ endNote }}.</p>
+    </div>
     <p>{{ note }}</p>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'VoiceInput',
-
   props: {
     name: String,
     label: String,
-    beginRange: {
-      type: Number,
+    beginNote: {
+      type: String,
       required: true,
     },
-    endRange: {
-      type: Number,
+    endNote: {
+      type: String,
       required: true,
     }
   },
 
   data() {
     return {
-      val: ''
+      val: '',
+      beginInt: this.convertValToInt(this.beginNote),
+      endInt: this.convertValToInt(this.endNote),
     }
   },
-  
-  computed: {
-    note: function(){
+
+  methods: {
+    convertValToInt: function(val) {
       const note_dict = {
         'Cbb': -2,    'Cb': -1,    'C': 0,     'C#': 1,     'C##': 2,
         'Dbb': 0,     'Db': 1,     'D': 2,     'D#': 3,     'D##': 4,
@@ -40,20 +48,33 @@ export default {
         'Bbb': 9,     'Bb': 10,    'B': 11,    'B#': 12,    'B##': 13
       };
 
-      if (this.val.length < 1) return "";
+      if (!val) return null;
 
-      const octave = Number(this.val[this.val.length - 1]);
-      const note_name = this.val.slice(0, this.val.length - 1);
+      const octave = Number(val[val.length - 1]);
+      const note_name = val.slice(0, val.length - 1);
 
       if (isNaN(octave) || note_dict[note_name] === undefined) {
-        console.log("Invalid input encountered!")
-        return "";
+        return null;
       } else {
-        const ret = note_dict[note_name] + (12 * octave);
-        console.log("Converted " + this.val + " into " + ret);
-        return ret;
+        return note_dict[note_name] + (12 * octave);
       }
     }
+
+  },
+  
+  computed: {
+    note: function() {
+      return this.convertValToInt(this.val);
+    },
+
+    withinRange: function() {
+      if (this.note || this.note === 0) {
+        return (this.note >= this.beginInt) && (this.note <= this.endInt);
+      } else {
+        return null;
+      }
+    },
   }
+
 }
 </script>

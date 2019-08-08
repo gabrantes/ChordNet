@@ -2,17 +2,17 @@
   <div id="app">
     <!-- <img alt="Vue logo" src="./assets/logo.png">
     <HelloWorld msg="Welcome to Your Vue.js App"/> -->
-    <VoiceInput :beginRange="23" :endRange="42" />
+    <VoicingsForm />
   </div>
 </template>
 
 <script>
-import VoiceInput from './components/VoiceInput.vue'
+import VoicingsForm from './components/VoicingsForm.vue'
 
 export default {
   name: 'app',
   components: {
-    VoiceInput
+    VoicingsForm
   }
 }
 </script>

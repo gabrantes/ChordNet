@@ -1,21 +1,26 @@
 <template>
   <b-container>
     <b-row>
-      <b-col v-for="voice in voices" :key="voice.id" sm="2">
-        <p>{{ voice.label }}</p>
-      </b-col>
-    </b-row>
-    <b-row>
-      <b-col v-for="voice in voices" :key="voice.id" sm="2">
-        <b-form-input :id="voice.name" v-model="voice.val"></b-form-input>
+      <b-col v-for="voice in voices" :key="voice.id" sm="3">
+        <VoiceInput
+          :label="voice.label"
+          :begin-note="voice.beginNote"
+          :end-note="voice.endNote"
+        />
       </b-col>
     </b-row>
   </b-container>
 </template>
 
 <script>
+import VoiceInput from './VoiceInput'
+
 export default {
   name: 'VoicingsForm',
+
+  components: {
+    VoiceInput
+  },
 
   data() {
     return {
@@ -23,74 +28,34 @@ export default {
         {
           id: 0,
           name: 'soprano',
-          label: 'Current Soprano',
-          val: '',
-          note: ''
+          label: 'Soprano',
+          beginNote: 'C4',
+          endNote: 'G5'
         },
         {
           id: 1,
           name: 'alto',
-          label: 'Current Alto',
-          val: '',
-          note: ''
+          label: 'Alto',
+          beginNote: 'G3',
+          endNote: 'D5'
         },
         {
           id: 2,
           name: 'tenor',
-          label: 'Current Tenor',
-          val: '',
-          note: ''
+          label: 'Tenor',
+          beginNote: 'C3',
+          endNote: 'G4'
         },
         {
           id: 3,
           name: 'bass',
-          label: 'Current Bass',
-          val: '',
-          note: ''
+          label: 'Bass',
+          beginNote: 'E2',
+          endNote: 'C4'
         }
       ]
     }
   },
-
-  methods: {
-    convertValToNote(val) {
-      const note_dict = {
-        'Cbb': -2,    'Cb': -1,    'C': 0,     'C#': 1,     'C##': 2,
-        'Dbb': 0,     'Db': 1,     'D': 2,     'D#': 3,     'D##': 4,
-        'Ebb': 2,     'Eb': 3,     'E': 4,     'E#': 5,     'E##': 6,
-        'Fbb': 3,     'Fb': 4,     'F': 5,     'F#': 6,     'F##': 7,
-        'Gbb': 5,     'Gb': 6,     'G': 7,     'G#': 8,     'G##': 9,
-        'Abb': 7,     'Ab': 8,     'A': 9,     'A#': 10,    'A##': 11,
-        'Bbb': 9,     'Bb': 10,    'B': 11,    'B#': 12,    'B##': 13
-      };
-
-      const octave = Number(val[val.length - 1]);
-      const note_name = val.slice(0, val.length - 1);
-
-      if (isNaN(octave) || note_dict[note_name] === undefined) {
-        console.log("Invalid input encountered!")
-        return null;
-      } else {
-        const note = note_dict[note_name] + (12 * octave);
-        console.log("Converted " + val + " into " + note)
-        return note;
-      }
-    }
-  },
-
-  computed: {
-    convertFormInput() {
-      for (let voice in this.voices) {
-        console.log("Inside for loop: " + voice.name);
-        let converted_val = this.convertValToNote(voice.val);
-        console.log(converted_val);
-        if (converted_val != null) {
-          voice.note = converted_val
-        }
-      }
-      return null;
-    }
-  }
 
 }
 </script>

@@ -97,12 +97,10 @@ export default {
 
     inputState: function() {
       const err = this.$store.getters.getVoiceError(this.id)
-      if (this.note) {
-        if (err === null) return null
-        else return !err
-      } else {
+      if (err === null)
         return null
-      }
+      else
+        return !err
     }
   }
 

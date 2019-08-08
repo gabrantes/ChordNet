@@ -2,14 +2,14 @@
   <div>
     <label v-if="label">{{ label }}</label>
     <b-form-input 
-      v-model="val"
+      v-model="note"
       :state="inputState"
     />
     <div v-if="withinRange === false">
       <p>Note out of range.</p>
       <p>Range is between {{ beginNote }} and {{ endNote }}.</p>
     </div>
-    <p>{{ note }}</p>
+    <p>{{ noteInt }}</p>
   </div>
 </template>
 
@@ -45,14 +45,14 @@ export default {
 
   data() {
     return {
-      val: '',
-      beginInt: this.convertValToInt(this.beginNote),
-      endInt: this.convertValToInt(this.endNote),
+      note: '',
+      beginInt: this.convertNoteToInt(this.beginNote),
+      endInt: this.convertNoteToInt(this.endNote),
     }
   },
 
   methods: {
-    convertValToInt: function(val) {
+    convertNoteToInt: function(val) {
       const note_dict = {
         'Cbb': -2,    'Cb': -1,    'C': 0,     'C#': 1,     'C##': 2,
         'Dbb': 0,     'Db': 1,     'D': 2,     'D#': 3,     'D##': 4,
@@ -78,17 +78,23 @@ export default {
   },
   
   computed: {
-    note: function() {
-      return this.convertValToInt(this.val);
+    noteInt: function() {
+      return this.convertNoteToInt(this.note);
     },
 
     withinRange: function() {
-      if (this.note || this.note === 0) {
-        const withinRange = (this.note >= this.beginInt) && (this.note <= this.endInt);
+      if (this.noteInt || this.noteInt === 0) {
+        const withinRange = (this.noteInt >= this.beginInt)
+                          && (this.noteInt <= this.endInt);
 
         this.$emit(
-          "set:note", 
-          {"id": this.id, "val": this.val, "note": this.note, "withinRange": withinRange}
+          "set:voice", 
+          {
+            "id": this.id, 
+            "note": this.note, 
+            "noteInt": this.noteInt, 
+            "withinRange": withinRange
+          }
         )  
       
         return withinRange;
@@ -98,7 +104,7 @@ export default {
     },
 
     inputState: function() {
-      if (this.val && this.errorState !== null)
+      if (this.noteInt && this.errorState !== null)
         return !this.errorState
       else
         return null

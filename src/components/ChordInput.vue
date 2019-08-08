@@ -9,7 +9,7 @@
           :begin-note="voice.beginNote"
           :end-note="voice.endNote"
           :error-state="errorArr[voice.id]"
-          @set:note="setVoice"
+          @set:voice="setVoice"
         />
       </b-col>
     </b-row>
@@ -64,26 +64,26 @@ export default {
       voices: [
         {
           id: 0,
-          val: null,
           note: null,
+          noteInt: null,
           withinRange: null,
         },
         {
           id: 1,
-          val: null,
           note: null,
+          noteInt: null,
           withinRange: null,
         },
         {
           id: 2,
-          val: null,
           note: null,
+          noteInt: null,
           withinRange: null,
         },
         {
           id: 3,
-          val: null,
           note: null,
+          noteInt: null,
           withinRange: null,
         },
       ]
@@ -92,8 +92,8 @@ export default {
 
   methods: {
     setVoice: function(emitted) {
-      this.voices[emitted.id].val = emitted.val
       this.voices[emitted.id].note = emitted.note
+      this.voices[emitted.id].noteInt = emitted.noteInt
       this.voices[emitted.id].withinRange = emitted.withinRange
     }
   },
@@ -101,7 +101,7 @@ export default {
   computed: {
     allEntered: function () {
       let allEntered = this.voices.reduce(
-        (acc, voice) => acc && (voice.note || voice.note === 0), true
+        (acc, voice) => acc && (voice.noteInt || voice.noteInt === 0), true
       )
       return Boolean(allEntered)
     },
@@ -120,12 +120,12 @@ export default {
       let arr = [false, false, false, false]
       for (let i = 0; i < 4; ++i) {
         if (i < 3) {
-          if (this.voices[i].note < this.voices[i+1].note) {
+          if (this.voices[i].noteInt < this.voices[i+1].noteInt) {
             arr[i] = true
             arr[i+1] = true
           }
         } else {
-          if (this.voices[i].note > this.voices[i-1].note) {
+          if (this.voices[i].noteInt > this.voices[i-1].noteInt) {
             arr[i] = true
             arr[i-1] = true
           }
@@ -147,7 +147,7 @@ export default {
 
       let arr = [false, false, false]
       for (let i = 0; i < 2; ++i) {
-        if (this.voices[i].note - this.voices[i+1].note > 12) {
+        if (this.voices[i].noteInt - this.voices[i+1].noteInt > 12) {
           arr[i] = true
           arr[i+1] = true
         }

@@ -74,24 +74,22 @@ export default {
   },
   
   computed: {
-    note: function() {
-      const note = this.convertValToInt(this.val);
-
-      if (note !== null) {
-        if (this.category === "currentVoices") {
-          this.$store.dispatch(
-            "setCurNote", 
-            {"id": this.id, "val": this.val, "note": note}
-          )
-        }  
-      }
-          
-      return note;
+    note: function() {         
+      return this.convertValToInt(this.val);
     },
 
     withinRange: function() {
       if (this.note || this.note === 0) {
-        return (this.note >= this.beginInt) && (this.note <= this.endInt);
+        const withinRange = (this.note >= this.beginInt) && (this.note <= this.endInt);
+
+        if (this.category === "currentVoices") {
+          this.$store.dispatch(
+            "setCurNote", 
+            {"id": this.id, "val": this.val, "note": this.note, "withinRange": withinRange}
+          )
+        }
+      
+        return withinRange;
       } else {
         return null;
       }

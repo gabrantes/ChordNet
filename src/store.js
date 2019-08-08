@@ -6,10 +6,10 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     currentVoices: [
-      {'val': null, 'note': null},
-      {'val': null, 'note': null},
-      {'val': null, 'note': null},
-      {'val': null, 'note': null},
+      {'val': null, 'note': null, 'withinRange': null},
+      {'val': null, 'note': null, 'withinRange': null},
+      {'val': null, 'note': null, 'withinRange': null},
+      {'val': null, 'note': null, 'withinRange': null},
     ]
   },
 
@@ -21,6 +21,7 @@ export default new Vuex.Store({
     SET_CURNOTE: (state, payload) => {
       state.currentVoices[payload.id].val = payload.val
       state.currentVoices[payload.id].note = payload.note
+      state.currentVoices[payload.id].withinRange = payload.withinRange
     }
   },
 

@@ -68,7 +68,41 @@ export default {
       if (this.category === "currentVoices")
         return this.$store.getters.getCurrentVoices;
       return null
-    }
+    },
+
+    allEntered: function () {
+      const allEntered = this.voices.reduce(
+        (acc, voice) => acc && (voice.note || voice.note === 0), true
+      )
+      return allEntered
+    },
+
+    allWithinRange: function() {
+      if (!this.allEntered) return null
+      const allWithinRange = this.voices.reduce(
+        (acc, voice) => acc && voice.withinRange, true
+      )
+      return allWithinRange;
+    },
+
+    voiceOverlap: function() {
+      if (!this.allEntered) return null
+      const voiceOverlap = this.voices.reduce(
+        (acc, voice, idx, arr) => {
+          if (idx < 3) {
+            return acc || (voice.note < arr[idx + 1].note)
+          } else {
+            return acc
+          }
+        }, false
+      )
+      return voiceOverlap
+    },    
+
+    isValid: function() {
+      if (!this.allEntered) return null
+      return (this.allWithinRange && !this.voiceOverlap)
+    },
   }
 
 }

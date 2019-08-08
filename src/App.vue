@@ -2,17 +2,17 @@
   <div id="app">
     <!-- <img alt="Vue logo" src="./assets/logo.png">
     <HelloWorld msg="Welcome to Your Vue.js App"/> -->
-    <VoicingsForm />
+    <ChordInput :category="'currentVoices'" />
   </div>
 </template>
 
 <script>
-import VoicingsForm from './components/VoicingsForm.vue'
+import ChordInput from './components/ChordInput.vue'
 
 export default {
   name: 'app',
   components: {
-    VoicingsForm
+    ChordInput
   }
 }
 </script>

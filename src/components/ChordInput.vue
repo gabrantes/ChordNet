@@ -5,9 +5,11 @@
         <VoiceInput
           :id="voice.id"
           :label="voice.label"
+          :category="category"
           :begin-note="voice.beginNote"
           :end-note="voice.endNote"
         />
+        <!-- TODO: Change category prop from hard-coded to a prop in VoicingsForm -->
       </b-col>
     </b-row>
   </b-container>
@@ -17,7 +19,14 @@
 import VoiceInput from './VoiceInput'
 
 export default {
-  name: 'VoicingsForm',
+  name: 'ChordInput',
+
+  props: {
+    category: {
+      type: String,
+      required: true,
+    }
+  },
 
   components: {
     VoiceInput
@@ -28,28 +37,24 @@ export default {
       voiceInputs: [
         {
           id: 0,
-          name: 'soprano',
           label: 'Soprano',
           beginNote: 'C4',
           endNote: 'G5'
         },
         {
           id: 1,
-          name: 'alto',
           label: 'Alto',
           beginNote: 'G3',
           endNote: 'D5'
         },
         {
           id: 2,
-          name: 'tenor',
           label: 'Tenor',
           beginNote: 'C3',
           endNote: 'G4'
         },
         {
           id: 3,
-          name: 'bass',
           label: 'Bass',
           beginNote: 'E2',
           endNote: 'C4'
@@ -60,12 +65,9 @@ export default {
 
   computed: {
     voices: function() {
-      return [
-        this.$store.getters.getCurSoprano,
-        this.$store.getters.getCurAlto,
-        this.$store.getters.getCurTenor,
-        this.$store.getters.getCurBass
-        ]
+      if (this.category === "currentVoices")
+        return this.$store.getters.getCurrentVoices;
+      return null
     }
   }
 

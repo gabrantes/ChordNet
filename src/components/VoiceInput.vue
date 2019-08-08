@@ -20,12 +20,19 @@ export default {
       type: Number,
       required: true,
     },
-    name: String,
+
     label: String,
+
+    category: {
+      type: String,
+      required: true,
+    },
+
     beginNote: {
       type: String,
       required: true,
     },
+
     endNote: {
       type: String,
       required: true,
@@ -57,7 +64,7 @@ export default {
       const octave = Number(val[val.length - 1]);
       const note_name = val.slice(0, val.length - 1);
 
-      if (isNaN(octave) || note_dict[note_name] === undefined) {
+      if (isNaN(octave) || !(note_name in note_dict)) {
         return null;
       } else {
         return note_dict[note_name] + (12 * octave);
@@ -69,7 +76,16 @@ export default {
   computed: {
     note: function() {
       const note = this.convertValToInt(this.val);
-      this.$store.dispatch("setCurNote", {"id": this.id, "val": this.val, "note": note})
+
+      if (note !== null) {
+        if (this.category === "currentVoices") {
+          this.$store.dispatch(
+            "setCurNote", 
+            {"id": this.id, "val": this.val, "note": note}
+          )
+        }  
+      }
+          
       return note;
     },
 

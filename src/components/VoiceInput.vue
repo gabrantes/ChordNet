@@ -10,7 +10,7 @@
       <p>Note out of range.</p>
       <p>Range is between {{ beginNote }} and {{ endNote }}.</p>
     </div>
-    <p>{{ noteInt }}</p>
+    <!-- <p>{{ noteInt }}</p> -->
   </div>
 </template>
 
@@ -130,7 +130,7 @@ export default {
      */
     inputState: function() {
       if (this.noteInt && this.errorState !== null)
-        return !this.errorState;
+        return (!this.errorState && this.inRange);
       else
         return null;
     }

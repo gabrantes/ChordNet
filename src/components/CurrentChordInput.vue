@@ -2,7 +2,7 @@
   <b-container>
     <h4>Current Chord Voicings</h4>
     <b-row align-h="center">
-      <b-col v-for="(voice, index) in voiceInputs" :key="voice.id" sm="1">
+      <b-col v-for="(voice, index) in voiceInputs" :key="voice.id" sm="2">
         <VoiceInput
           :id="voice.id"
           :label="voice.label"
@@ -189,27 +189,24 @@ export default {
 
   },
 
-  // TODO: Move all computed properties to data. Update onChange of VoiceInput or of voices.
   computed: {
     /**
      * For each voice, check if it overlaps with any neighboring voices
      * @return {Array.<Boolean>} ith element is true if ith voice has voice overlap
      */
     voiceOverlapArr: function() {
-      // if (!this.allEntered()) {
-      //   return [null, null, null, null];
-      // }
-
       let arr = [false, false, false, false];
-      for (let i = 0; i < 4; ++i) {
-        if (i < 3) {
+      for (let i = 0; i < 3; ++i) {
+        let curVoiceEntered = (this.voices[i].noteInt || this.voices[i].noteInt === 0);
+        let nextVoiceEntered = (this.voices[i+1].noteInt || this.voices[i+1].noteInt === 0);
+
+        if (curVoiceEntered && nextVoiceEntered) {
           if (this.voices[i].noteInt < this.voices[i+1].noteInt) {
             arr[i] = true;
             arr[i+1] = true;
           }
         }
       }
-
       return arr;
     },
     
@@ -219,16 +216,17 @@ export default {
      * @return {Array.<Boolean>} ith element is true if ith voice has spacing error
      */
     spacingErrorArr: function() {
-      // if (!this.allEntered()) {
-      //   return [null, null, null, undefined];
-      // }
-
       let arr = [false, false, false, undefined];
       for (let i = 0; i < 2; ++i) {
-        if (this.voices[i].noteInt - this.voices[i+1].noteInt > 12) {
-          arr[i] = true;
-          arr[i+1] = true;
-        }
+        let curVoiceEntered = (this.voices[i].noteInt || this.voices[i].noteInt === 0);
+        let nextVoiceEntered = (this.voices[i+1].noteInt || this.voices[i+1].noteInt === 0);
+
+        if (curVoiceEntered && nextVoiceEntered) {
+          if (this.voices[i].noteInt - this.voices[i+1].noteInt > 12) {
+            arr[i] = true;
+            arr[i+1] = true;
+          }
+        }        
       }
       return arr;
     },
@@ -238,12 +236,8 @@ export default {
      * @return {Array.<Boolean>} ith element is true if ith voice has any type of error
      */
     errorArr: function() {
-      // if (!this.allEntered()) {
-      //   return [null, null, null, null];
-      // }
-
-      let errorArr = this.voiceOverlapArr;
-      errorArr = errorArr.map(
+      // errorArr is voiceOverlapArr OR'd with spacingErrorArr element-wise
+      const errorArr = this.voiceOverlapArr.map(
         (err, idx) => {
           if (idx < this.spacingErrorArr.length) {
             return (err || this.spacingErrorArr[idx]);

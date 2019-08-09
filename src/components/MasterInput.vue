@@ -1,8 +1,17 @@
 <template>
   <b-container>
-      <KeyInput class="sub"/>
-      <CurrentChordInput class="sub" />
-      <NextChordOptions class="sub" :mode="1" />
+      <KeyInput 
+        class="sub" 
+        @send:key="setKey"
+        @send:mode="setMode"/>
+      <CurrentChordInput
+        class="sub"
+        @send:chord="setCurrentVoicings"/>
+      <NextChordOptions
+        class="sub"
+        :mode="this.mode"
+        @send:degree="setNextDegree"
+        @send:inversion="setNextInversion"/>
   </b-container>
 </template>
 
@@ -19,10 +28,59 @@ export default {
   props: {},
 
   data() {
-    return null;
+    return {
+      key: null,
+      mode: 1,
+      currentVoicings: [
+        {
+          id: 0,
+          note: null,
+          noteInt: null,
+        },
+        {
+          id: 1,
+          note: null,
+          noteInt: null,
+        },
+        {
+          id: 2,
+          note: null,
+          noteInt: null,
+        },
+        {
+          id: 3,
+          note: null,
+          noteInt: null,
+        },
+      ],
+      nextDegree: null,
+      nextInversion: null,
+      nextSeventh: null,
+    }
   },
 
-  methods: {},
+  methods: {
+    setMode: function(emittedMode) {
+      this.mode = emittedMode;
+    },
+
+    setKey: function(emittedKey) {
+      this.key = emittedKey;
+    },
+
+    setCurrentVoicings: function(emittedVoices) {
+      this.currentVoicings = emittedVoices;
+    },
+
+    setNextDegree: function(emittedDegree) {
+      this.nextDegree = emittedDegree;
+    },
+
+    setNextInversion: function(emitted) {
+      this.nextInversion = emitted.inv;
+      this.nextSeventh = emitted.sev;
+    },
+  },
 
   computed: {}
 

@@ -7,7 +7,8 @@
         <label>Key</label>
         <b-form-select 
           v-model="selectedKey" 
-          :options="keyOptions">
+          :options="keyOptions"
+          @change="sendKey">
         </b-form-select>
       </b-col>
 
@@ -15,7 +16,8 @@
         <label>Major / Minor</label>
         <b-form-select 
           v-model="selectedMode" 
-          :options="modeOptions">
+          :options="modeOptions"
+          @change="sendMode">
         </b-form-select>
       </b-col>
 
@@ -54,8 +56,16 @@ export default {
       ],
     }
   },
-  
-  computed: {}
+
+  methods: {
+    sendMode: function() {
+      this.$emit('send:mode', this.selectedMode);
+    },
+
+    sendKey: function() {
+      this.$emit('send:key', this.selectedKey);
+    }
+  },
 
 }
 </script>

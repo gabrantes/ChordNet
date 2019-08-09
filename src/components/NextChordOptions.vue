@@ -7,7 +7,8 @@
         <label>Degree</label>
         <b-form-select
           v-model="selectedDegree"
-          :options="degreeOptions[mode]">
+          :options="degreeOptions[mode]"
+          @change="sendDegree">
         </b-form-select>
       </b-col>
 
@@ -15,7 +16,8 @@
         <label>Inversion</label>
         <b-form-select
           v-model="selectedInversion"
-          :options="inversionOptions">
+          :options="inversionOptions"
+          @change="sendInversion">
         </b-form-select>
       </b-col>
 
@@ -78,9 +80,15 @@ export default {
     }
   },
 
-  methods: {},
+  methods: {
+    sendDegree: function() {
+      this.$emit('send:degree', this.selectedDegree);
+    },
 
-  computed: {}
+    sendInversion: function() {
+      this.$emit('send:inversion', this.selectedInversion);
+    }
+  },
 
 }
 </script>

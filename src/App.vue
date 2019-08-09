@@ -1,16 +1,16 @@
 <template>
   <div id="app">
-    <ChordInput :category="'currentVoices'" />
+    <KeyInput />
   </div>
 </template>
 
 <script>
-import ChordInput from './components/ChordInput.vue'
+import KeyInput from './components/KeyInput.vue'
 
 export default {
   name: 'app',
   components: {
-    ChordInput
+    KeyInput
   }
 }
 </script>

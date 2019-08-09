@@ -101,9 +101,9 @@ export default {
         const withinRange = (this.noteInt >= this.beginInt)
                           && (this.noteInt <= this.endInt);
 
-        // emit voice data
+        // send voice data
         this.$emit(
-          'set:voice', 
+          'send:voice', 
           {
             'id': this.id, 
             'note': this.note, 

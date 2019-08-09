@@ -1,14 +1,14 @@
 <template>
   <b-container>
     <b-row>
-      <b-col v-for="voice in voiceInputs" :key="voice.id" sm="3">
+      <b-col v-for="voice in voiceInputs" :key="voice.id" sm="1">
         <VoiceInput
           :id="voice.id"
           :label="voice.label"
           :begin-note="voice.beginNote"
           :end-note="voice.endNote"
           :error-state="errorArr[voice.id]"
-          @set:voice="setVoice"
+          @send:voice="setVoice"
         />
       </b-col>
     </b-row>
@@ -215,7 +215,23 @@ export default {
     isValid: function() {
       if (!this.allEntered) return null;
       
-      return (this.allWithinRange && !this.voiceOverlap && !this.spacingError);
+      const isValid = this.allWithinRange && !this.voiceOverlap && !this.spacingError;
+      if (isValid) {
+        // send chord data
+        this.$emit(
+          'send:chord',
+          this.voices.map(
+            (voice) => {
+              return {
+                'id': voice.id,
+                'note': voice.note,
+                'noteInt': voice.noteInt
+                };
+            }
+          )
+        );
+      }
+      return isValid;
     },
   }
 

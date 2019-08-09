@@ -2,7 +2,7 @@
   <b-container>
     <h4>Current Chord Voicings</h4>
     <b-row align-h="center">
-      <b-col v-for="voice in voiceInputs" :key="voice.id" sm="1">
+      <b-col v-for="(voice, index) in voiceInputs" :key="voice.id" sm="1">
         <VoiceInput
           :id="voice.id"
           :label="voice.label"
@@ -11,6 +11,8 @@
           :error-state="errorArr[voice.id]"
           @send:voice="setVoice"
         />
+        <p v-show=spacingErrorArr[index]>Spacing Error</p>
+        <p v-show=voiceOverlapArr[index]>Voice Overlap</p>
       </b-col>
     </b-row>
   </b-container>
@@ -95,7 +97,7 @@ export default {
       this.voices[emitted.id].note = emitted.note;
       this.voices[emitted.id].noteInt = emitted.noteInt;
       this.voices[emitted.id].withinRange = emitted.withinRange;
-    }
+    },
   },
 
   // TODO: Move all computed properties to data. Update onChange of VoiceInput or of voices.
@@ -104,6 +106,7 @@ export default {
      * @return {Boolean} true if all 4 VoiceInputs have noteInts
      */
     allEntered: function () {
+      console.log("Entering allEntered.")
       let allEntered = this.voices.reduce(
         (acc, voice) => acc && (voice.noteInt || voice.noteInt === 0), true
       );
@@ -114,6 +117,7 @@ export default {
      * @return {Boolean} true if each noteInt is within its respective range
      */
     allWithinRange: function() {
+      console.log("Entering allWithinRange.")
       if (!this.allEntered) return null;
 
       const allWithinRange = this.voices.reduce(
@@ -140,43 +144,44 @@ export default {
       }
 
       return arr;
-    },
+    },    
 
     /**
      * @return {Boolean} true if any voice overlaps are present, false otherwise
      */
     voiceOverlap: function() {
+      console.log("Entering voiceOverlap.")
       if (!this.allEntered) return null;
 
-      const voiceOverlap = this.voiceOverlapArr.reduce(
+      const voiceOverlap = this.voiceOverlapArr().reduce(
         (acc, overlap) => acc || overlap, false
       );
       return voiceOverlap;
-    },    
-
+    },
+    
     /**
      * For the 3 upper voices, check for any spacing errors
      * (Spacing error = more than 1 octave between voices)
      * @return {Array.<Boolean>} ith element is true if ith voice has spacing error
      */
     spacingErrorArr: function() {
-      if (!this.allEntered) return [null, null, null];
+      if (!this.allEntered) return [null, null, null, undefined];
 
-      let arr = [false, false, false];
+      let arr = [false, false, false, undefined];
       for (let i = 0; i < 2; ++i) {
         if (this.voices[i].noteInt - this.voices[i+1].noteInt > 12) {
           arr[i] = true;
           arr[i+1] = true;
         }
       }
-
       return arr;
-    },
+    },    
 
     /**
      * @return {Boolean} true if any spacing errors are present, false otherwise
      */
     spacingError: function() {
+      console.log("Entering spacingError.")
       if (!this.allEntered) return null;
 
       const spacingError = this.spacingErrorArr.reduce(
@@ -190,6 +195,7 @@ export default {
      * @return {Array.<Boolean>} ith element is true if ith voice has any type of error
      */
     errorArr: function() {
+      console.log("Entering errorArr.")
       if (!this.allEntered) return [null, null, null, null];
 
       let errorArr = this.voiceOverlapArr;
@@ -208,11 +214,19 @@ export default {
      * @return {Boolean} true if chord is valid
      */
     isValid: function() {
+      console.log("Entering isValid")
       if (!this.allEntered) return null;
       
       const isValid = this.allWithinRange && !this.voiceOverlap && !this.spacingError;
-      if (isValid) {
+      
+      console.log("Returning isValid function")
+      return isValid;
+    },
+
+    sendChord: function() {
+      if (this.isValid) {
         // send chord data
+        console.log("Sending chord data!")
         this.$emit(
           'send:chord',
           this.voices.map(
@@ -226,8 +240,8 @@ export default {
           )
         );
       }
-      return isValid;
-    },
+      return this.isValid;
+    }
   }
 
 }

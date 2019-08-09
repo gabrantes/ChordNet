@@ -6,7 +6,7 @@
         @send:mode="setMode"/>
       <CurrentChordInput
         class="sub"
-        @send:chord="setCurrentVoicings"/>
+        @send:chord="setCurrentChord"/>
       <NextChordOptions
         class="sub"
         :mode="this.mode"
@@ -31,7 +31,7 @@ export default {
     return {
       key: null,
       mode: 1,
-      currentVoicings: [
+      currentChord: [
         {
           id: 0,
           note: null,
@@ -68,8 +68,8 @@ export default {
       this.key = emittedKey;
     },
 
-    setCurrentVoicings: function(emittedVoices) {
-      this.currentVoicings = emittedVoices;
+    setCurrentChord: function(emittedChord) {
+      this.currentChord = emittedChord;
     },
 
     setNextDegree: function(emittedDegree) {

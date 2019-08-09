@@ -4,8 +4,9 @@
     <b-form-input 
       v-model="note"
       :state="inputState"
+      @input="handleInput"
     />
-    <div v-if="withinRange === false">
+    <div v-if="inRange === false">
       <p>Note out of range.</p>
       <p>Range is between {{ beginNote }} and {{ endNote }}.</p>
     </div>
@@ -46,12 +47,36 @@ export default {
   data() {
     return {
       note: '', // Value in text input -- a pitch represented as a string
+      noteInt: null,
       beginInt: this.convertNoteToInt(this.beginNote),
       endInt: this.convertNoteToInt(this.endNote),
+      inRange: null,
     }
   },
 
   methods: {
+    /**
+     * Event handler when text input changes
+     */
+    handleInput: function() {
+      this.noteInt = this.convertNoteToInt(this.note);
+      this.inRange = this.checkRange();
+
+      if (this.inRange) {
+        // send voice data
+        this.$emit(
+          'send:voice', 
+          {
+            'id': this.id, 
+            'note': this.note, 
+            'noteInt': this.noteInt, 
+            'inRange': this.inRange
+          }
+        );  
+      }      
+      return;
+    },
+
     /**
      * Convert a musical pitch from string representation to an integer.
      * @param {String} note The string representation of a musical pitch, e.g. 'C4'.
@@ -79,46 +104,26 @@ export default {
       } else {
         return note_dict[note_name] + (12 * octave);
       }
-    }
-
-  },
-  
-  computed: {
-    /**
-     * Convert value in text input (this.note) to an integer representation
-     * @return {Number} integer representation of this.note
-     */
-    noteInt: function() {
-      return this.convertNoteToInt(this.note);
     },
 
     /**
-     * Check if noteInt is within the valid range of the voice
-     * @return {Boolean} true if noteInt is within range, false otherwise
+     * Check if this.noteInt is within the valid range of the voice
+     * @return {Boolean} true if this.noteInt is within range, false otherwise
      */
-    withinRange: function() {
+    checkRange: function() {
       if (this.noteInt || this.noteInt === 0) {
-        const withinRange = (this.noteInt >= this.beginInt)
-                          && (this.noteInt <= this.endInt);
-
-        // send voice data
-        this.$emit(
-          'send:voice', 
-          {
-            'id': this.id, 
-            'note': this.note, 
-            'noteInt': this.noteInt, 
-            'withinRange': withinRange
-          }
-        );  
-      
-        return withinRange;
+        const inRange = (this.noteInt >= this.beginInt)
+                          && (this.noteInt <= this.endInt);      
+        return inRange;
       } else {
         // Invalid input
         return null;
       }
-    },
+    },   
 
+  },
+  
+  computed: {
     /**
      * Determine display state of text input, shows errors if any
      * @return {Boolean}

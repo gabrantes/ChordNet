@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <h1><b>CHORD</b>NET</h1>
     <MasterInput />
   </div>
 </template>

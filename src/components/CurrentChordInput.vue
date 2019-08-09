@@ -1,6 +1,7 @@
 <template>
   <b-container>
-    <b-row>
+    <h4>Current Chord Voicings</h4>
+    <b-row align-h="center">
       <b-col v-for="voice in voiceInputs" :key="voice.id" sm="1">
         <VoiceInput
           :id="voice.id"
@@ -19,14 +20,7 @@
 import VoiceInput from './VoiceInput'
 
 export default {
-  name: 'ChordInput',
-
-  props: {
-    category: {
-      type: String,
-      required: true,
-    }
-  },
+  name: 'CurrentChordInput',
 
   components: {
     VoiceInput

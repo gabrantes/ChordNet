@@ -1,16 +1,16 @@
 <template>
   <div id="app">
-    <KeyInput />
+    <MasterInput />
   </div>
 </template>
 
 <script>
-import KeyInput from './components/KeyInput.vue'
+import MasterInput from './components/MasterInput.vue'
 
 export default {
   name: 'app',
   components: {
-    KeyInput
+    MasterInput
   }
 }
 </script>

@@ -1,14 +1,24 @@
 <template>
   <b-container>
-    <b-row>
+    <h4>Key Signature</h4>
+    <b-row align-h="center">
+
       <b-col sm="2">
         <label>Key</label>
-        <b-form-select v-model="selectedKey" :options="keyOptions"></b-form-select>
+        <b-form-select 
+          v-model="selectedKey" 
+          :options="keyOptions">
+        </b-form-select>
       </b-col>
+
       <b-col sm="2">
         <label>Major / Minor</label>
-        <b-form-select v-model="selectedMode" :options="modeOptions"></b-form-select>
+        <b-form-select 
+          v-model="selectedMode" 
+          :options="modeOptions">
+        </b-form-select>
       </b-col>
+
     </b-row>
   </b-container>
 </template>
@@ -16,10 +26,6 @@
 <script>
 export default {
   name: 'KeyInput',
-
-  props: {},
-
-  components: {},
 
   data() {
     return {
@@ -48,9 +54,7 @@ export default {
       ],
     }
   },
-
-  methods: {},
-
+  
   computed: {}
 
 }

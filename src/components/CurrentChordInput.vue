@@ -98,6 +98,7 @@ export default {
     }
   },
 
+  // TODO: Move all computed properties to data. Update onChange of VoiceInput or of voices.
   computed: {
     /**
      * @return {Boolean} true if all 4 VoiceInputs have noteInts

@@ -96,6 +96,7 @@ export default {
      * @param {Object} emitted The object emitted from the event
      */
     setVoice: function(emitted) {
+      // update component data
       this.voices[emitted.id].note = emitted.note;
       this.voices[emitted.id].noteInt = emitted.noteInt;
       this.voices[emitted.id].inRange = emitted.inRange;
@@ -167,7 +168,7 @@ export default {
 
       const spacingError = this.spacingErrorArr.reduce(
         (acc, spacing) => acc || spacing, false
-      )
+      );
       return spacingError;
     },
 
@@ -202,6 +203,7 @@ export default {
 
         if (curVoiceEntered && nextVoiceEntered) {
           if (this.voices[i].noteInt < this.voices[i+1].noteInt) {
+            // overlap detected
             arr[i] = true;
             arr[i+1] = true;
           }
@@ -223,6 +225,7 @@ export default {
 
         if (curVoiceEntered && nextVoiceEntered) {
           if (this.voices[i].noteInt - this.voices[i+1].noteInt > 12) {
+            // spacing error detected
             arr[i] = true;
             arr[i+1] = true;
           }
@@ -244,7 +247,7 @@ export default {
           }
           return err;
         }
-      )
+      );
       return errorArr;
     },
 

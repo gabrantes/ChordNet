@@ -59,6 +59,7 @@ export default {
      * Event handler when text input changes
      */
     handleInput: function() {
+      // update component data
       this.noteInt = this.convertNoteToInt(this.note);
       this.inRange = this.checkRange();
 

@@ -18,11 +18,11 @@ export default {
       chord: {
         soprano: {
           note: {clef: 'treble', keys: ['A/4'], duration: 'q', stem_direction: 1},
-          err: true,
+          err: false,
         },
         alto: {
           note: {clef: 'treble', keys: ['C#/4'], duration: 'q', stem_direction: -1},
-          err: false,
+          err: true,
         },
         tenor: {
           note: {clef: 'bass', keys: ['E/3'], duration: 'q', stem_direction: 1},
@@ -45,6 +45,16 @@ export default {
     this.drawEmptySystem();
   },
 
+  watch: {
+    chord: {
+      handler() {
+        this.drawChord();
+      },
+      deep: true,
+    },
+   
+  },
+  
   methods: {
     createTrebleStave: function() {
       let VF = this.vf;
@@ -95,12 +105,7 @@ export default {
       for (let voice in this.chord) {
         if (this.chord[voice]['note']['keys'] !== null) {
           let staveVoice = new VF.Voice(voice_settings);
-          let note = new VF.StaveNote(this.chord[voice]['note']);
-
-          if (this.chord[voice]['err']) {
-            note.setStyle({fillStyle: 'red', strokeStyle: 'red'});
-          }
-
+          const note = this.createNote(this.chord[voice]);
           staveVoice.addTickables([note]);
 
           if (voice === 'soprano' || voice === 'alto') {
@@ -124,6 +129,24 @@ export default {
         }
       }
     },
+
+    createNote: function(voiceObject) {
+      let VF = this.vf;
+      let note = new VF.StaveNote(voiceObject.note);
+      const noteStr = voiceObject.note.keys[0];
+
+      // check for accidentals
+      if (noteStr.length > 3) {
+        const accidental = noteStr.slice(1, -2);
+        note.addAccidental(0, new VF.Accidental(accidental));
+      }
+
+      // check for errors
+      if (voiceObject.err) {
+        note.setStyle({fillStyle: 'red', strokeStyle: 'red'});
+      }
+      return note;
+    }
 
   },
   

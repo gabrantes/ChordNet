@@ -1,19 +1,19 @@
 <template>
   <div id="app">
     <h1><b>CHORD</b>NET</h1>
-    <StaffDisplay />
+    <ChordDisplay />
     <!-- <MasterInput /> -->
   </div>
 </template>
 
 <script>
 // import MasterInput from './components/MasterInput.vue'
-import StaffDisplay from './components/StaffDisplay.vue'
+import ChordDisplay from './components/ChordDisplay.vue'
 
 export default {
   name: 'app',
   components: {
-    StaffDisplay,
+    ChordDisplay,
   }
 }
 </script>

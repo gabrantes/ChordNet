@@ -12,7 +12,7 @@ export default {
   name: 'ProgressionDisplay',
 
   props: {
-    inputChord: {
+    inputCurChord: {
       type: Array,
     }
   },
@@ -20,55 +20,87 @@ export default {
   data() {
     return {
       context: null,
-      chord: {
-        soprano: {
-          note: {clef: 'treble', keys: [null], duration: 'q', stem_direction: 1},
-          err: false,
+      cur: {
+        chord: {
+          soprano: {
+            note: {clef: 'treble', keys: [null], duration: 'q', stem_direction: 1},
+            err: false,
+          },
+          alto: {
+            note: {clef: 'treble', keys: [null], duration: 'q', stem_direction: -1},
+            err: false,
+          },
+          tenor: {
+            note: {clef: 'bass', keys: [null], duration: 'q', stem_direction: 1},
+            err: false,
+          },
+          bass: {
+            note: {clef: 'bass', keys: [null], duration: 'q', stem_direction: -1},
+            err: false,
+          },
         },
-        alto: {
-          note: {clef: 'treble', keys: [null], duration: 'q', stem_direction: -1},
-          err: false,
-        },
-        tenor: {
-          note: {clef: 'bass', keys: [null], duration: 'q', stem_direction: 1},
-          err: false,
-        },
-        bass: {
-          note: {clef: 'bass', keys: [null], duration: 'q', stem_direction: -1},
-          err: false,
-        },
+        stave: {
+          treble: null,
+          bass: null,
+        }
       },
-      curStave: {
-        treble: null,
-        bass: null,
-      },
-      nextStave: {
-        treble: null,
-        bass: null,
+      next: {
+        chord: {
+          soprano: {
+            note: {clef: 'treble', keys: [null], duration: 'q', stem_direction: 1},
+            err: false,
+          },
+          alto: {
+            note: {clef: 'treble', keys: [null], duration: 'q', stem_direction: -1},
+            err: false,
+          },
+          tenor: {
+            note: {clef: 'bass', keys: [null], duration: 'q', stem_direction: 1},
+            err: false,
+          },
+          bass: {
+            note: {clef: 'bass', keys: [null], duration: 'q', stem_direction: -1},
+            err: false,
+          },
+        },
+        stave: {
+          treble: null,
+          bass: null,
+        }
       }
     }
   },
 
+  computed: {
+    curChord() {
+      return this.cur.chord;
+    },
+    
+    nextChord() {
+      return this.next.chord;
+    },
+  },
+
   watch: {
-    chord: {
+    curChord: {
       handler() {
         this.drawChord();
       },
       deep: true,
     },
 
-    inputChord: {
+    inputCurChord: {
       handler(val) {
         const voice_dict = {0: 'soprano', 1: 'alto', 2: 'tenor', 3: 'bass'};
         for (let voice of val) {
           const key = voice_dict[voice.id];
           if (voice.note) {
             const note = voice.note.slice(0, -1) + '/' + voice.note.slice(-1);
-            this.chord[key].note.keys = [note];
+            this.cur.chord[key].note.keys = [note];
           } else {
-            this.chord[key].note.keys = null;
+            this.cur.chord[key].note.keys = null;
           }
-          this.chord[key].err = voice.err;
+          this.cur.chord[key].err = voice.err;
         }
       },
       deep: true,
@@ -76,10 +108,10 @@ export default {
   },
   
   mounted() {
-    this.curStave.treble = this.createStave('treble', 10, 40);
-    this.curStave.bass = this.createStave('bass', 10, 150);
-    this.nextStave.treble = this.createStave('treble', 275, 40);
-    this.nextStave.bass = this.createStave('bass', 275, 150);
+    this.cur.stave.treble = this.createStave('treble', 20, 10);
+    this.cur.stave.bass = this.createStave('bass', 20, 120);
+    this.next.stave.treble = this.createStave('treble', 235, 10);
+    this.next.stave.bass = this.createStave('bass', 235, 120);
     this.drawEmptySystem();
   }, 
   
@@ -91,7 +123,7 @@ export default {
     createContext: function() {
       let div = document.getElementById('display');
       let renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
-      renderer.resize(400, 300);  // (width, height)
+      renderer.resize(360, 250);  // (width, height)
       let context = renderer.getContext();
       context.setFont('Arial', 10, '');
       return context;
@@ -100,10 +132,10 @@ export default {
     drawEmptySystem: function() {
       this.cleanDisplay();
       this.context = this.createContext(); // NEW renderer/context
-      this.curStave.treble.setContext(this.context).draw();
-      this.curStave.bass.setContext(this.context).draw();
-      this.nextStave.treble.setContext(this.context).draw();
-      this.nextStave.bass.setContext(this.context).draw();
+      this.cur.stave.treble.setContext(this.context).draw();
+      this.cur.stave.bass.setContext(this.context).draw();
+      this.next.stave.treble.setContext(this.context).draw();
+      this.next.stave.bass.setContext(this.context).draw();
     },  
 
     cleanDisplay: function() {
@@ -120,17 +152,17 @@ export default {
       const voice_settings = {num_beats: 1, beat_value: 4};
       let voices = [];
       
-      for (let voice in this.chord) {
-        if (this.chord[voice]['note']['keys'] !== null) {
+      for (let voice in this.cur.chord) {
+        if (this.cur.chord[voice]['note']['keys'] !== null) {
           let staveVoice = new VF.Voice(voice_settings);
-          const note = this.createNote(this.chord[voice]);
+          const note = this.createNote(this.cur.chord[voice]);
           staveVoice.addTickables([note]);
 
           if (voice === 'soprano' || voice === 'alto') {
-            staveVoice.setStave(this.curStave.treble);
+            staveVoice.setStave(this.cur.stave.treble);
           }
           if (voice === 'tenor' || voice === 'bass') {
-            staveVoice.setStave(this.curStave.bass);
+            staveVoice.setStave(this.cur.stave.bass);
           }
 
           formatter.joinVoices([staveVoice]);

@@ -1,6 +1,9 @@
 <template>
-  <div id="display">
-  </div>
+  <div>
+    <div id="display"/>
+    <b-button @click="addNotes"></b-button>
+    <b-button variant="danger" @click="drawEmptySystem()"></b-button>
+  </div>  
 </template>
 
 <script>
@@ -17,69 +20,82 @@ export default {
         {clef: "treble", keys: ["c/4"], duration: "q"},
         {clef: "treble", keys: ["e/4"], duration: "q"},
         {clef: "treble", keys: ["g/4"], duration: "q"},
-        {clef: "treble", keys: ["c/5", "e/4", "g/4"], duration: "q"},
       ],
+      trebleStave: null,
+      bassStave: null,
     }
   },
-
+  
   mounted() {
-    this.init();
-    let VF = this.vf;
-    let stave = this.new_stave();
-    stave.draw();
-    let notes = this.add_notes(this.notes);
-    let voice = this.new_voice(notes);
-    voice.draw(this.context, stave);
+    this.vf = Vex.Flow;
+    this.drawEmptySystem();
   },
 
   methods: {
-    init: function() {
-      let VF = Vex.Flow;
-      this.vf = VF;
+    removeAllElements: function() {
       let div = document.getElementById("display");
-      let renderer = new VF.Renderer(div,VF.Renderer.Backends.SVG);
-      renderer.resize(500, 500);
-      let context = renderer.getContext();
-      context.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
-      this.context = context;
-    },
-
-    new_stave: function() {
-      let VF = this.vf;
-      // Create a stave of width 400 at position 10, 40 on the canvas.
-      let stave = new VF.Stave(10, 40, 400);
-      // Add a clef and time signature.
-      //stave.addClef("treble").addTimeSignature("4/4");
-      stave.addClef("treble");
-      // Connect it to the rendering context and draw!
-      return stave.setContext(this.context);
-    },
-
-    new_voice: function(notes) {
-      let VF = this.vf;
-      // Create a voice in 4/4 and add above notes
-      let voice = new VF.Voice({num_beats: 4,  beat_value: 4});
-      voice.addTickables(notes);
-      // Format and justify the notes to 400 pixels.
-      let formatter = new VF.Formatter().joinVoices([voice]).format([voice], 400);
-      // Render voice
-      return voice;
-    },
-
-    add_notes: function(note_data) {
-      let VF = this.vf;
-      let notes = [];
-      for (var n in note_data) {
-        let note = new VF.StaveNote(note_data[n]);
-        notes.push(note);
+      // clean div
+      while (div.firstChild) {
+        div.removeChild(div.firstChild);
       }
-      return notes;
+      return;
+    },
+
+    drawEmptySystem: function() {
+      this.removeAllElements();
+      let VF = this.vf;
+      let context = this.createContext();
+
+      let trebleStave = this.getTrebleStave();
+      trebleStave.setContext(context).draw()
+
+      let bassStave = this.getBassStave();
+      bassStave.setContext(context).draw()
+    },
+
+    createContext: function() {
+      let VF = this.vf;
+      let div = document.getElementById("display");
+      let renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
+      renderer.resize(250, 300);
+      this.context = renderer.getContext();
+      this.context.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
+      return this.context;
+    },
+
+    getContext: function() {
+      if (this.context == null) {
+        this.context = this.createContext();
+      }      
+      return this.context;
+    },
+
+    getTrebleStave: function() {
+      if (this.trebleStave === null) {
+        let VF = this.vf;
+        this.trebleStave = new VF.Stave(10, 40, 200);
+        this.trebleStave.addClef("treble");
+      }
+      return this.trebleStave;
+    },
+
+    getBassStave: function() {
+      if (this.bassStave === null) {
+        let VF = this.vf;
+        this.bassStave = new VF.Stave(10, 120, 200);
+        this.bassStave.addClef("bass");
+      }
+      return this.bassStave;
+    },
+
+    addNotes: function() {
+      let VF = this.vf;
+      let notes = this.notes.map((note) => new VF.StaveNote(note));
+      let voice = new VF.Voice({num_beats: 3, beat_value: 4});
+      voice.addTickables(notes);
+      let formatter = new VF.Formatter().joinVoices([voice]).format([voice], 200);
+      voice.draw(this.getContext(), this.getTrebleStave());
     }
-},
-
-  updated() {
-    this.init()
-  },
-
+  }
 }
 </script>

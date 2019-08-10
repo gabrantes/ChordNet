@@ -32,9 +32,8 @@ export default {
   },
 
   methods: {
-    removeAllElements: function() {
+    cleanDisplay: function() {
       let div = document.getElementById("display");
-      // clean div
       while (div.firstChild) {
         div.removeChild(div.firstChild);
       }
@@ -42,9 +41,8 @@ export default {
     },
 
     drawEmptySystem: function() {
-      this.removeAllElements();
-      let VF = this.vf;
-      let context = this.createContext();
+      this.cleanDisplay();
+      let context = this.createContext(); // NEW renderer/context
 
       let trebleStave = this.getTrebleStave();
       trebleStave.setContext(context).draw()
@@ -93,7 +91,9 @@ export default {
       let notes = this.notes.map((note) => new VF.StaveNote(note));
       let voice = new VF.Voice({num_beats: 3, beat_value: 4});
       voice.addTickables(notes);
+      // eslint-disable-next-line
       let formatter = new VF.Formatter().joinVoices([voice]).format([voice], 200);
+      // draw on current renderer/context
       voice.draw(this.getContext(), this.getTrebleStave());
     }
   }

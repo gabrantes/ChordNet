@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <h1><b>CHORD</b>NET</h1>
-    <ChordDisplay 
+    <ProgressionDisplay 
       :inputChord="curChordDisplay"/>
     <MasterInput 
       @send:cur-chord-display="toCurDisplay"/>
@@ -9,14 +9,14 @@
 </template>
 
 <script>
-import ChordDisplay from './components/ChordDisplay.vue'
+import ProgressionDisplay from './components/ProgressionDisplay.vue'
 import MasterInput from './components/MasterInput.vue'
 
 export default {
   name: 'app',
 
   components: {
-    ChordDisplay,
+    ProgressionDisplay,
     MasterInput,
   },
 

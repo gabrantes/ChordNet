@@ -9,7 +9,7 @@ import Vex from 'vexflow/src/index.js'
 let VF = Vex.Flow;
 
 export default {
-  name: 'ChordDisplay',
+  name: 'ProgressionDisplay',
 
   props: {
     inputChord: {

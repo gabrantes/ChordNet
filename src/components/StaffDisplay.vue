@@ -1,8 +1,8 @@
 <template>
   <div>
     <div id="display"/>
-    <b-button @click="addNotes"></b-button>
-    <b-button variant="danger" @click="drawEmptySystem()"></b-button>
+    <b-button @click="drawNotes">Add Notes</b-button>
+    <b-button variant="danger" @click="drawEmptySystem">Clear System</b-button>
   </div>  
 </template>
 
@@ -28,10 +28,43 @@ export default {
   
   mounted() {
     this.vf = Vex.Flow;
+    this.trebleStave = this.createTrebleStave();
+    this.bassStave = this.createBassStave();
     this.drawEmptySystem();
   },
 
   methods: {
+    createTrebleStave: function() {
+      let VF = this.vf;
+      let trebleStave = new VF.Stave(10, 40, 200);
+      trebleStave.addClef("treble");
+      return trebleStave;
+    },
+
+    createBassStave: function() {
+      let VF = this.vf;
+      let bassStave = new VF.Stave(10, 120, 200);
+      bassStave.addClef("bass");
+      return bassStave;
+    },
+
+    createContext: function() {
+      let VF = this.vf;
+      let div = document.getElementById("display");
+      let renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
+      renderer.resize(250, 300);
+      let context = renderer.getContext();
+      context.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
+      return context;
+    },
+    
+    drawEmptySystem: function() {
+      this.cleanDisplay();
+      this.context = this.createContext(); // NEW renderer/context
+      this.trebleStave.setContext(this.context).draw()
+      this.bassStave.setContext(this.context).draw()
+    },  
+
     cleanDisplay: function() {
       let div = document.getElementById("display");
       while (div.firstChild) {
@@ -40,61 +73,16 @@ export default {
       return;
     },
 
-    drawEmptySystem: function() {
-      this.cleanDisplay();
-      let context = this.createContext(); // NEW renderer/context
-
-      let trebleStave = this.getTrebleStave();
-      trebleStave.setContext(context).draw()
-
-      let bassStave = this.getBassStave();
-      bassStave.setContext(context).draw()
-    },
-
-    createContext: function() {
+    drawNotes: function() {
       let VF = this.vf;
-      let div = document.getElementById("display");
-      let renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
-      renderer.resize(250, 300);
-      this.context = renderer.getContext();
-      this.context.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
-      return this.context;
-    },
-
-    getContext: function() {
-      if (this.context == null) {
-        this.context = this.createContext();
-      }      
-      return this.context;
-    },
-
-    getTrebleStave: function() {
-      if (this.trebleStave === null) {
-        let VF = this.vf;
-        this.trebleStave = new VF.Stave(10, 40, 200);
-        this.trebleStave.addClef("treble");
-      }
-      return this.trebleStave;
-    },
-
-    getBassStave: function() {
-      if (this.bassStave === null) {
-        let VF = this.vf;
-        this.bassStave = new VF.Stave(10, 120, 200);
-        this.bassStave.addClef("bass");
-      }
-      return this.bassStave;
-    },
-
-    addNotes: function() {
-      let VF = this.vf;
+      this.drawEmptySystem();
       let notes = this.notes.map((note) => new VF.StaveNote(note));
       let voice = new VF.Voice({num_beats: 3, beat_value: 4});
       voice.addTickables(notes);
       // eslint-disable-next-line
       let formatter = new VF.Formatter().joinVoices([voice]).format([voice], 200);
       // draw on current renderer/context
-      voice.draw(this.getContext(), this.getTrebleStave());
+      voice.draw(this.context, this.trebleStave);
     }
   }
 }

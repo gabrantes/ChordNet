@@ -2,9 +2,9 @@
   <div id="app">
     <h1><b>CHORD</b>NET</h1>
     <ChordDisplay 
-      :inputChord="displayChord"/>
+      :inputChord="curChordDisplay"/>
     <MasterInput 
-      @send:display-chord="toDisplay"/>
+      @send:cur-chord-display="toCurDisplay"/>
   </div>
 </template>
 
@@ -22,13 +22,13 @@ export default {
 
   data() {
     return {
-      displayChord: null,
+      curChordDisplay: null,
     }
   },
 
   methods: {
-    toDisplay: function(displayChord) {
-      this.displayChord = displayChord;
+    toCurDisplay: function(curChordDisplay) {
+      this.curChordDisplay = curChordDisplay;
     }
   }
 }

@@ -8,7 +8,7 @@
     <CurrentChordInput
       class="sub"
       @send:chord="setCurrentChord"
-      @send:display-chord="sendDisplayChord"
+      @send:chord-display="sendCurChordDisplay"
       :disabled="disabled"/>
     <NextChordOptions
       class="sub"
@@ -88,11 +88,11 @@ export default {
       this.nextSeventh = emitted.sev;
     },
 
-    sendDisplayChord: function(displayChord) {
-      this.$emit('send:display-chord', displayChord);
+    sendCurChordDisplay: function(chordDisplay) {
+      this.$emit('send:cur-chord-display', chordDisplay);
     },
 
-    // or possibly do this in App?
+    // or possibly do this in App.vue?
     requestFromBackend: function() {
       let body = [];
       body.push(this.key);

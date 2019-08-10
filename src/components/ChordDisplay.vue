@@ -1,15 +1,15 @@
 <template>
   <div>
     <div id="display"/>
-    <!-- <b-button @click="drawChord">Add Notes</b-button>
-    <b-button variant="danger" @click="drawEmptySystem">Clear System</b-button> -->
   </div>  
 </template>
 
 <script>
 import Vex from 'vexflow/src/index.js'
+let VF = Vex.Flow;
 
 export default {
+  name: 'ChordDisplay',
 
   props: {
     inputChord: {
@@ -19,7 +19,6 @@ export default {
 
   data() {
     return {
-      vf: null,
       context: null,
       chord: {
         soprano: {
@@ -39,16 +38,15 @@ export default {
           err: false,
         },
       },
-      trebleStave: null,
-      bassStave: null,
+      curStave: {
+        treble: null,
+        bass: null,
+      },
+      nextStave: {
+        treble: null,
+        bass: null,
+      }
     }
-  },
-  
-  mounted() {
-    this.vf = Vex.Flow;
-    this.trebleStave = this.createTrebleStave();
-    this.bassStave = this.createBassStave();
-    this.drawEmptySystem();
   },
 
   watch: {
@@ -74,40 +72,38 @@ export default {
         }
       },
       deep: true,
-    }
-   
+    }   
   },
   
+  mounted() {
+    this.curStave.treble = this.createStave('treble', 10, 40);
+    this.curStave.bass = this.createStave('bass', 10, 150);
+    this.nextStave.treble = this.createStave('treble', 275, 40);
+    this.nextStave.bass = this.createStave('bass', 275, 150);
+    this.drawEmptySystem();
+  }, 
+  
   methods: {
-    createTrebleStave: function() {
-      let VF = this.vf;
-      let trebleStave = new VF.Stave(10, 40, 100); // (x, y, width)
-      trebleStave.addClef('treble');
-      return trebleStave;
-    },
-
-    createBassStave: function() {
-      let VF = this.vf;
-      let bassStave = new VF.Stave(10, 150, 100); // (x, y, width)
-      bassStave.addClef('bass');
-      return bassStave;
+    createStave: function(type, x, y) {
+      return new VF.Stave(x, y, 100).addClef(type);
     },
 
     createContext: function() {
-      let VF = this.vf;
       let div = document.getElementById('display');
       let renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
-      renderer.resize(150, 300);  // (width, height)
+      renderer.resize(400, 300);  // (width, height)
       let context = renderer.getContext();
-      context.setFont('Arial', 10, '').setBackgroundFillStyle('#eed');
+      context.setFont('Arial', 10, '');
       return context;
     },
     
     drawEmptySystem: function() {
       this.cleanDisplay();
       this.context = this.createContext(); // NEW renderer/context
-      this.trebleStave.setContext(this.context).draw()
-      this.bassStave.setContext(this.context).draw()
+      this.curStave.treble.setContext(this.context).draw();
+      this.curStave.bass.setContext(this.context).draw();
+      this.nextStave.treble.setContext(this.context).draw();
+      this.nextStave.bass.setContext(this.context).draw();
     },  
 
     cleanDisplay: function() {
@@ -118,7 +114,6 @@ export default {
     },
 
     drawChord: function() {
-      let VF = this.vf;
       this.drawEmptySystem();
       let formatter = new VF.Formatter();   
       
@@ -132,10 +127,10 @@ export default {
           staveVoice.addTickables([note]);
 
           if (voice === 'soprano' || voice === 'alto') {
-            staveVoice.setStave(this.trebleStave);
+            staveVoice.setStave(this.curStave.treble);
           }
           if (voice === 'tenor' || voice === 'bass') {
-            staveVoice.setStave(this.bassStave);
+            staveVoice.setStave(this.curStave.bass);
           }
 
           formatter.joinVoices([staveVoice]);
@@ -154,7 +149,6 @@ export default {
     },
 
     createNote: function(voiceObject) {
-      let VF = this.vf;
       let note = new VF.StaveNote(voiceObject.note);
       const noteStr = voiceObject.note.keys[0];
 

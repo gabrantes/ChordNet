@@ -6,6 +6,7 @@
         <VoiceInput
           :id="voice.id"
           :label="voice.label"
+          :placeholder="voice.placeholder"
           :begin-note="voice.beginNote"
           :end-note="voice.endNote"
           :error-state="errorArr[voice.id]"
@@ -42,24 +43,28 @@ export default {
         {
           id: 0,
           label: 'Soprano',
+          placeholder: 'e.g. "C5"',
           beginNote: 'C4',
           endNote: 'G5',
         },
         {
           id: 1,
           label: 'Alto',
+          placeholder: 'e.g. "E4"',
           beginNote: 'G3',
           endNote: 'D5',
         },
         {
           id: 2,
           label: 'Tenor',
+          placeholder: 'e.g. "G3"',
           beginNote: 'C3',
           endNote: 'G4',
         },
         {
           id: 3,
           label: 'Bass',
+          placeholder: 'e.g. "C3"',
           beginNote: 'E2',
           endNote: 'C4',
         }
@@ -108,7 +113,7 @@ export default {
       this.voices[emitted.id].noteInt = emitted.noteInt;
       this.voices[emitted.id].inRange = emitted.inRange;
 
-      const displayChord = this.voices.map(
+      const chordDisplay = this.voices.map(
         (voice, index) => {
           return {
             'id': voice.id,
@@ -117,7 +122,7 @@ export default {
           }
         } 
       )
-      this.$emit('send:display-chord', displayChord);
+      this.$emit('send:chord-display', chordDisplay);
 
       if (this.allEntered()) {
         if (this.validate()) {

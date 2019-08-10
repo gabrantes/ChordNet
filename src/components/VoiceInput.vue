@@ -3,6 +3,7 @@
     <label v-if="label">{{ label }}</label>
     <b-form-input 
       v-model="note"
+      :placeholder="placeholder"
       :state="inputState"
       @input="handleInput"
       :disabled="disabled"/>
@@ -16,6 +17,8 @@
 
 <script>
 export default {
+  name: 'VoiceInput',
+  
   props: {
     id: {
       type: Number,
@@ -23,6 +26,7 @@ export default {
     },
 
     label: String,
+    placeholder: String,
 
     beginNote: {
       // first note of valid range, inclusive

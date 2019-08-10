@@ -15,7 +15,7 @@
       @send:degree="setNextDegree"
       @send:inversion="setNextInversion"
       :disabled="disabled"/>
-    <b-button pill>Submit</b-button>
+    <b-button pill @click="requestFromBackend">Submit</b-button>
   </b-container>
 </template>
 
@@ -57,9 +57,9 @@ export default {
           noteInt: null,
         },
       ],
-      nextDegree: null,
-      nextInversion: null,
+      nextDegree: null,      
       nextSeventh: null,
+      nextInversion: null,
 
       disabled: false,
     }
@@ -86,6 +86,20 @@ export default {
       this.nextInversion = emitted.inv;
       this.nextSeventh = emitted.sev;
     },
+
+    // or possibly do this in App?
+    requestFromBackend: function() {
+      let body = [];
+      body.push(key);
+      body.push(mode);
+      body.concat(this.currentChord.map((voice) => voice.noteInt));
+      body.push(this.nextDegree);
+      body.push(this.nextSeventh);
+      body.push(this.nextInversion);
+
+      // send [body] to the backend API
+      return [body];
+    }
   },
 
   computed: {}

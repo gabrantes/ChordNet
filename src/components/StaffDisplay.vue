@@ -7,7 +7,6 @@
 </template>
 
 <script>
-// import _ from 'vexflow/releases/vexflow-debug.js'
 import Vex from 'vexflow/src/index.js'
 
 export default {
@@ -16,39 +15,23 @@ export default {
     return {
       vf: null,
       context: null,
-      chord: [
-        {
-          id: 0,
-          note: 'A4',
+      chord: {
+        soprano: {
+          note: {clef: 'treble', keys: ['A/4'], duration: 'q', stem_direction: 1},
+          err: true,
         },
-        {
-          id: 1,
-          note: 'C#4',
+        alto: {
+          note: {clef: 'treble', keys: ['C#/4'], duration: 'q', stem_direction: -1},
+          err: false,
         },
-        {
-          id: 2,
-          note: 'E3',
+        tenor: {
+          note: {clef: 'bass', keys: ['E/3'], duration: 'q', stem_direction: 1},
+          err: false,
         },
-        {
-          id: 3,
-          note: 'A2',
+        bass: {
+          note: {clef: 'bass', keys: ['A/2'], duration: 'q', stem_direction: -1},
+          err: false,
         },
-      ],
-      vfNotes: [
-        {clef: "treble", keys: ["A/4"], duration: "q", stem_direction: 1},
-        {clef: "treble", keys: ["C#/4"], duration: "q", stem_direction: -1},
-        {clef: "bass", keys: ["E/3"], duration: "q", stem_direction: 1},
-        {clef: "bass", keys: ["A/2"], duration: "q", stem_direction: -1},
-      ],
-      mNotes: {
-        treble: [
-          {clef: "treble", keys: ["A/4"], duration: "q"},
-          {clef: "treble", keys: ["C#/4"], duration: "q"},
-        ],
-        bass: [
-          {clef: "bass", keys: ["E/3"], duration: "q"},
-          {clef: "bass", keys: ["A/2"], duration: "q"},
-        ]
       },
       trebleStave: null,
       bassStave: null,
@@ -66,24 +49,24 @@ export default {
     createTrebleStave: function() {
       let VF = this.vf;
       let trebleStave = new VF.Stave(10, 40, 100); // (x, y, width)
-      trebleStave.addClef("treble");
+      trebleStave.addClef('treble');
       return trebleStave;
     },
 
     createBassStave: function() {
       let VF = this.vf;
       let bassStave = new VF.Stave(10, 150, 100); // (x, y, width)
-      bassStave.addClef("bass");
+      bassStave.addClef('bass');
       return bassStave;
     },
 
     createContext: function() {
       let VF = this.vf;
-      let div = document.getElementById("display");
+      let div = document.getElementById('display');
       let renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
       renderer.resize(150, 300);  // (width, height)
       let context = renderer.getContext();
-      context.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
+      context.setFont('Arial', 10, '').setBackgroundFillStyle('#eed');
       return context;
     },
     
@@ -95,43 +78,54 @@ export default {
     },  
 
     cleanDisplay: function() {
-      let div = document.getElementById("display");
+      let div = document.getElementById('display');
       while (div.firstChild) {
         div.removeChild(div.firstChild);
       }
-      return;
     },
 
     drawChord: function() {
       let VF = this.vf;
-      this.drawEmptySystem();   
+      this.drawEmptySystem();
+      let formatter = new VF.Formatter();   
       
-      let voice_settings = {num_beats: 1, beat_value: 4};
+      const voice_settings = {num_beats: 1, beat_value: 4};
       let voices = [];
-      for (let i = 0; i < 4; ++i) {
-        voices.push(new VF.Voice(voice_settings));
+      
+      for (let voice in this.chord) {
+        if (this.chord[voice]['note']['keys'] !== null) {
+          let staveVoice = new VF.Voice(voice_settings);
+          let note = new VF.StaveNote(this.chord[voice]['note']);
+
+          if (this.chord[voice]['err']) {
+            note.setStyle({fillStyle: 'red', strokeStyle: 'red'});
+          }
+
+          staveVoice.addTickables([note]);
+
+          if (voice === 'soprano' || voice === 'alto') {
+            staveVoice.setStave(this.trebleStave);
+          }
+          if (voice === 'tenor' || voice === 'bass') {
+            staveVoice.setStave(this.bassStave);
+          }
+
+          formatter.joinVoices([staveVoice]);
+          voices.push(staveVoice);
+        }
       }
       
-      let notes = this.vfNotes.map((note) => new VF.StaveNote(note));
-      voices = voices.map(
-        (voice, index) => {
-          let stave = (index < 2) ? this.trebleStave : this.bassStave;
-          voice.addTickables([notes[index]]).setStave(stave);
-          return voice;
+      if (voices.length > 0) {
+        formatter.format(voices, 50);
+
+        // draw each voice onto current renderer/context
+        for (let voice of voices) {
+          voice.setContext(this.context).draw();
         }
-      )
-
-      let formatter = new VF.Formatter();
-      for (let i = 0; i < 4; ++i) {
-        formatter.joinVoices([voices[i]]);
-      }
-      formatter.format(voices, 50);
-
-      // draw on current renderer/context
-      for (let i = 0; i < 4; ++i) {
-        voices[i].setContext(this.context).draw();
       }
     },
-  }
+
+  },
+  
 }
 </script>

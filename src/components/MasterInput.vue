@@ -8,6 +8,7 @@
     <CurrentChordInput
       class="sub"
       @send:chord="setCurrentChord"
+      @send:display-chord="sendDisplayChord"
       :disabled="disabled"/>
     <NextChordOptions
       class="sub"
@@ -87,11 +88,15 @@ export default {
       this.nextSeventh = emitted.sev;
     },
 
+    sendDisplayChord: function(displayChord) {
+      this.$emit('send:display-chord', displayChord);
+    },
+
     // or possibly do this in App?
     requestFromBackend: function() {
       let body = [];
-      body.push(key);
-      body.push(mode);
+      body.push(this.key);
+      body.push(this.mode);
       body.concat(this.currentChord.map((voice) => voice.noteInt));
       body.push(this.nextDegree);
       body.push(this.nextSeventh);

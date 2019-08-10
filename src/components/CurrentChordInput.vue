@@ -108,6 +108,17 @@ export default {
       this.voices[emitted.id].noteInt = emitted.noteInt;
       this.voices[emitted.id].inRange = emitted.inRange;
 
+      const displayChord = this.voices.map(
+        (voice, index) => {
+          return {
+            'id': voice.id,
+            'note': voice.note,
+            'err': this.errorArr[index],
+          }
+        } 
+      )
+      this.$emit('send:display-chord', displayChord);
+
       if (this.allEntered()) {
         if (this.validate()) {
           // get only relevant chord data
@@ -188,8 +199,7 @@ export default {
         return null;
       }
       
-      const isValid = this.allInRange() 
-                  && !this.voiceOverlap() && !this.spacingError();
+      const isValid = this.allInRange() && !this.voiceOverlap() && !this.spacingError();
       
       return isValid;
     },

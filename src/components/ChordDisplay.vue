@@ -1,8 +1,8 @@
 <template>
   <div>
     <div id="display"/>
-    <b-button @click="drawChord">Add Notes</b-button>
-    <b-button variant="danger" @click="drawEmptySystem">Clear System</b-button>
+    <!-- <b-button @click="drawChord">Add Notes</b-button>
+    <b-button variant="danger" @click="drawEmptySystem">Clear System</b-button> -->
   </div>  
 </template>
 
@@ -11,25 +11,31 @@ import Vex from 'vexflow/src/index.js'
 
 export default {
 
+  props: {
+    inputChord: {
+      type: Array,
+    }
+  },
+
   data() {
     return {
       vf: null,
       context: null,
       chord: {
         soprano: {
-          note: {clef: 'treble', keys: ['A/4'], duration: 'q', stem_direction: 1},
+          note: {clef: 'treble', keys: [null], duration: 'q', stem_direction: 1},
           err: false,
         },
         alto: {
-          note: {clef: 'treble', keys: ['C#/4'], duration: 'q', stem_direction: -1},
-          err: true,
+          note: {clef: 'treble', keys: [null], duration: 'q', stem_direction: -1},
+          err: false,
         },
         tenor: {
-          note: {clef: 'bass', keys: ['E/3'], duration: 'q', stem_direction: 1},
+          note: {clef: 'bass', keys: [null], duration: 'q', stem_direction: 1},
           err: false,
         },
         bass: {
-          note: {clef: 'bass', keys: ['A/2'], duration: 'q', stem_direction: -1},
+          note: {clef: 'bass', keys: [null], duration: 'q', stem_direction: -1},
           err: false,
         },
       },
@@ -52,6 +58,23 @@ export default {
       },
       deep: true,
     },
+
+    inputChord: {
+      handler(val) {
+        const voice_dict = {0: 'soprano', 1: 'alto', 2: 'tenor', 3: 'bass'};
+        for (let voice of val) {
+          const key = voice_dict[voice.id];
+          if (voice.note) {
+            const note = voice.note.slice(0, -1) + '/' + voice.note.slice(-1);
+            this.chord[key].note.keys = [note];
+          } else {
+            this.chord[key].note.keys = null;
+          }
+          this.chord[key].err = voice.err;
+        }
+      },
+      deep: true,
+    }
    
   },
   

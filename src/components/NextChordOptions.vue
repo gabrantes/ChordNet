@@ -8,8 +8,8 @@
         <b-form-select
           v-model="selectedDegree"
           :options="degreeOptions[mode]"
-          @change="sendDegree">
-        </b-form-select>
+          @change="sendDegree"
+          :disabled="disabled"/>
       </b-col>
 
       <b-col sm="2">
@@ -17,8 +17,8 @@
         <b-form-select
           v-model="selectedInversion"
           :options="inversionOptions"
-          @change="sendInversion">
-        </b-form-select>
+          @change="sendInversion"
+          :disabled="disabled"/>
       </b-col>
 
     </b-row>
@@ -34,6 +34,10 @@ export default {
       // 0 for minor keys, 1 for major keys
       type: Number,
       required: true,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
     }
   },
 

@@ -8,8 +8,8 @@
         <b-form-select 
           v-model="selectedKey" 
           :options="keyOptions"
-          @change="sendKey">
-        </b-form-select>
+          @change="sendKey"
+          :disabled="disabled"/>
       </b-col>
 
       <b-col sm="2">
@@ -17,8 +17,8 @@
         <b-form-select 
           v-model="selectedMode" 
           :options="modeOptions"
-          @change="sendMode">
-        </b-form-select>
+          @change="sendMode"
+          :disabled="disabled"/>
       </b-col>
 
     </b-row>
@@ -28,6 +28,13 @@
 <script>
 export default {
   name: 'KeyInput',
+
+  props: {
+    disabled: {
+      type: Boolean,
+      default: false,
+    }
+  },
 
   data() {
     return {

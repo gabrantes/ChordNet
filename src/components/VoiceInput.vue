@@ -5,7 +5,7 @@
       v-model="note"
       :state="inputState"
       @input="handleInput"
-    />
+      :disabled="disabled"/>
     <div v-if="inRange === false">
       <p>Note out of range.</p>
       <p>Range is between {{ beginNote }} and {{ endNote }}.</p>
@@ -41,6 +41,11 @@ export default {
     errorState: {
       // Used in determining display state of text input
       type: Boolean,
+    },
+
+    disabled: {
+      type: Boolean,
+      default: false,
     }
   },
 

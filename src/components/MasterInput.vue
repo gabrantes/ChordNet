@@ -1,17 +1,21 @@
 <template>
   <b-container>
-      <KeyInput 
-        class="sub" 
-        @send:key="setKey"
-        @send:mode="setMode"/>
-      <CurrentChordInput
-        class="sub"
-        @send:chord="setCurrentChord"/>
-      <NextChordOptions
-        class="sub"
-        :mode="this.mode"
-        @send:degree="setNextDegree"
-        @send:inversion="setNextInversion"/>
+    <KeyInput 
+      class="sub" 
+      @send:key="setKey"
+      @send:mode="setMode"
+      :disabled="disabled"/>
+    <CurrentChordInput
+      class="sub"
+      @send:chord="setCurrentChord"
+      :disabled="disabled"/>
+    <NextChordOptions
+      class="sub"
+      :mode="this.mode"
+      @send:degree="setNextDegree"
+      @send:inversion="setNextInversion"
+      :disabled="disabled"/>
+    <b-button pill>Submit</b-button>
   </b-container>
 </template>
 
@@ -56,6 +60,8 @@ export default {
       nextDegree: null,
       nextInversion: null,
       nextSeventh: null,
+
+      disabled: false,
     }
   },
 

@@ -9,8 +9,8 @@
           :begin-note="voice.beginNote"
           :end-note="voice.endNote"
           :error-state="errorArr[voice.id]"
-          @send:voice="setVoice"
-        />
+          :disabled="disabled"
+          @send:voice="setVoice"/>
         <p v-show=spacingErrorArr[index]>Spacing Error</p>
         <p v-show=voiceOverlapArr[index]>Voice Overlap</p>
       </b-col>
@@ -26,6 +26,13 @@ export default {
 
   components: {
     VoiceInput
+  },
+
+  props: {
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   data() {

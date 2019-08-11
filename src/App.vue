@@ -6,8 +6,10 @@
       :inputCurChord="curChordDisplay"
       :keySignature="keyStr"/>
     <MasterInput 
+      :disabled="disableInputs"
       @send:cur-chord-display="toCurDisplay"
       @send:key-display="toKeyDisplay"
+      @request:backend="requestBackend"
       id="inputs"/>
   </div>
 </template>
@@ -30,6 +32,7 @@ export default {
     return {
       curChordDisplay: null,
       keyStr: 'C',
+      disableInputs: false,
     }
   },
 
@@ -37,8 +40,19 @@ export default {
     toCurDisplay: function(curChordDisplay) {
       this.curChordDisplay = curChordDisplay;
     },
+
     toKeyDisplay: function(keyStr) {
       this.keyStr = keyStr;
+    },
+
+    requestBackend: function(req) {
+      this.disableInputs = true;
+
+      // simulate timing
+      setTimeout(() => {this.disableInputs = false;}, 2000);
+
+      // TODO: send req to backend
+      return;
     }
   }
 }

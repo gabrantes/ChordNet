@@ -20,7 +20,8 @@
       pill 
       id="button"
       variant="primary"
-      @click="requestFromBackend">
+      @click="requestFromBackend"
+      :disabled="!ready || disabled">
         Submit
     </b-button>
   </b-container>
@@ -36,13 +37,18 @@ export default {
 
   components: {KeyInput, CurrentChordInput, NextChordOptions},
 
-  props: {},
+  props: {
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+  },
 
   data() {
     return {
       key: {
-        num: null,
-        str: null,
+        num: 0,
+        str: 'C',
       },
       mode: 1,
       currentChord: [
@@ -70,8 +76,6 @@ export default {
       nextDegree: null,      
       nextSeventh: null,
       nextInversion: null,
-
-      disabled: false,
     }
   },
 
@@ -108,17 +112,35 @@ export default {
       let body = [];
       body.push(this.key.num);
       body.push(this.mode);
-      body.concat(this.currentChord.map((voice) => voice.noteInt));
+      body = body.concat(this.currentChord.map((voice) => voice.noteInt));
       body.push(this.nextDegree);
       body.push(this.nextSeventh);
       body.push(this.nextInversion);
-
+      
       // send [body] to the backend API
-      return [body];
+      this.$emit('request:backend', [body]);
     }
   },
 
-  computed: {}
+  computed: {
+    ready: function() {
+      let ready = true;
+      for (let key in this.$data) {
+        if (key === 'key') {
+          ready = ready && (!!this.key.num || this.key.num === 0) && !!this.key.str;
+          continue;
+        }
+        if (key === 'currentChord') {
+          for (let voice of this.currentChord) {
+            ready = ready && (!!voice.noteInt || voice.noteInt === 0);
+          }
+          continue;
+        }
+        ready = ready && (!!this.$data[key] || this.$data[key] === 0);
+      }
+      return ready;
+    }
+  }
 
 }
 </script>

@@ -113,8 +113,7 @@ export default {
     },
 
     keySignature: {
-      handler(val) {
-        console.log("detected key change -> " + val);
+      handler() {
         this.drawChord();
       },
       deep: true,
@@ -235,7 +234,6 @@ export default {
     },
 
     createNote: function(voiceObject) {
-      // console.log(voiceObject.note.keys);
       let note = new VF.StaveNote(voiceObject.note);
       
       // check for errors

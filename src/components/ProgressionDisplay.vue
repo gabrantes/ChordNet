@@ -15,7 +15,7 @@ export default {
     inputCurChord: {
       type: Array,
     },
-    inputKey: {
+    keySignature: {
       type: String,
       default: 'A',
     }
@@ -23,24 +23,24 @@ export default {
 
   data() {
     return {
-      keySignature: 'A',
+      // keySignature: 'A',
       context: null,
       cur: {
         chord: {
           soprano: {
-            note: {clef: 'treble', keys: [null], duration: 'q', stem_direction: 1},
+            note: {clef: 'treble', keys: null, duration: 'q', stem_direction: 1},
             err: false,
           },
           alto: {
-            note: {clef: 'treble', keys: [null], duration: 'q', stem_direction: -1},
+            note: {clef: 'treble', keys: null, duration: 'q', stem_direction: -1},
             err: false,
           },
           tenor: {
-            note: {clef: 'bass', keys: [null], duration: 'q', stem_direction: 1},
+            note: {clef: 'bass', keys: null, duration: 'q', stem_direction: 1},
             err: false,
           },
           bass: {
-            note: {clef: 'bass', keys: [null], duration: 'q', stem_direction: -1},
+            note: {clef: 'bass', keys: null, duration: 'q', stem_direction: -1},
             err: false,
           },
         },
@@ -52,19 +52,19 @@ export default {
       next: {
         chord: {
           soprano: {
-            note: {clef: 'treble', keys: [null], duration: 'q', stem_direction: 1},
+            note: {clef: 'treble', keys: null, duration: 'q', stem_direction: 1},
             err: false,
           },
           alto: {
-            note: {clef: 'treble', keys: [null], duration: 'q', stem_direction: -1},
+            note: {clef: 'treble', keys: null, duration: 'q', stem_direction: -1},
             err: false,
           },
           tenor: {
-            note: {clef: 'bass', keys: [null], duration: 'q', stem_direction: 1},
+            note: {clef: 'bass', keys: null, duration: 'q', stem_direction: 1},
             err: false,
           },
           bass: {
-            note: {clef: 'bass', keys: [null], duration: 'q', stem_direction: -1},
+            note: {clef: 'bass', keys: null, duration: 'q', stem_direction: -1},
             err: false,
           },
         },
@@ -99,7 +99,8 @@ export default {
         const voice_dict = {0: 'soprano', 1: 'alto', 2: 'tenor', 3: 'bass'};
         for (let voice of val) {
           const key = voice_dict[voice.id];
-          if (voice.note) {
+          if (voice.noteInt) {
+            // if valid note
             const note = voice.note.slice(0, -1) + '/' + voice.note.slice(-1);
             this.cur.chord[key].note.keys = [note];
           } else {
@@ -112,18 +113,15 @@ export default {
     },
 
     keySignature: {
-      function(val) {
-        console.log(val);
+      handler(val) {
+        console.log("detected key change -> " + val);
         this.drawChord();
-      }
+      },
+      deep: true,
     }
   },
   
-  mounted() {
-    this.cur.stave.treble = this.createStave('treble', 20, 10);
-    this.cur.stave.bass = this.createStave('bass', 20, 120);
-    this.next.stave.treble = this.createStave('treble', 300, 10);
-    this.next.stave.bass = this.createStave('bass', 300, 120);
+  mounted() {    
     this.drawEmptySystem(true);
   }, 
   
@@ -139,6 +137,12 @@ export default {
       let context = renderer.getContext();
       context.setFont('Arial', 10, '');
       context.scale(0.7, 0.7);
+
+      this.cur.stave.treble = this.createStave('treble', 20, 10);
+      this.cur.stave.bass = this.createStave('bass', 20, 120);
+      this.next.stave.treble = this.createStave('treble', 300, 10);
+      this.next.stave.bass = this.createStave('bass', 300, 120);
+
       return context;
     },
 
@@ -187,7 +191,7 @@ export default {
     },
 
     drawChord: function() {
-      this.drawEmptySystem(false);
+      this.drawEmptySystem(true);
       let formatter = new VF.Formatter();      
       
       const voice_settings = {num_beats: 1, beat_value: 4};
@@ -214,6 +218,7 @@ export default {
       }
       
       if (voices.length > 0) {
+        VF.Accidental.applyAccidentals(voices, this.keySignature);
         if (trebleVoices.length > 0) {
           formatter.joinVoices(trebleVoices);
         }
@@ -230,15 +235,9 @@ export default {
     },
 
     createNote: function(voiceObject) {
+      // console.log(voiceObject.note.keys);
       let note = new VF.StaveNote(voiceObject.note);
-      const noteStr = voiceObject.note.keys[0];
-
-      // check for accidentals
-      if (noteStr.length > 3) {
-        const accidental = noteStr.slice(1, -2);
-        note.addAccidental(0, new VF.Accidental(accidental));
-      }
-
+      
       // check for errors
       if (voiceObject.err) {
         note.setStyle({fillStyle: 'red', strokeStyle: 'red'});

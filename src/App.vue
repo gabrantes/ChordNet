@@ -4,7 +4,7 @@
     <ProgressionDisplay
       id="display"
       :inputCurChord="curChordDisplay"
-      :inputKey="keyStr"/>
+      :keySignature="keyStr"/>
     <MasterInput 
       @send:cur-chord-display="toCurDisplay"
       @send:key-display="toKeyDisplay"

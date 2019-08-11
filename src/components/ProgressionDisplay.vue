@@ -191,6 +191,8 @@ export default {
       let formatter = new VF.Formatter();      
       
       const voice_settings = {num_beats: 1, beat_value: 4};
+      let trebleVoices = [];
+      let bassVoices = [];
       let voices = [];
       
       for (let voice in this.cur.chord) {
@@ -201,17 +203,23 @@ export default {
 
           if (voice === 'soprano' || voice === 'alto') {
             staveVoice.setStave(this.cur.stave.treble);
+            trebleVoices.push(staveVoice);
           }
           if (voice === 'tenor' || voice === 'bass') {
             staveVoice.setStave(this.cur.stave.bass);
-          }
-
-          formatter.joinVoices([staveVoice]);
+            bassVoices.push(staveVoice);
+          }          
           voices.push(staveVoice);
         }
       }
       
       if (voices.length > 0) {
+        if (trebleVoices.length > 0) {
+          formatter.joinVoices(trebleVoices);
+        }
+        if (bassVoices.length > 0) {
+          formatter.joinVoices(bassVoices);
+        }
         formatter.format(voices, 50);
 
         // draw each voice onto current renderer/context

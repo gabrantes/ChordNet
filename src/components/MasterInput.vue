@@ -34,7 +34,10 @@ export default {
 
   data() {
     return {
-      key: null,
+      key: {
+        num: null,
+        str: null,
+      },
       mode: 1,
       currentChord: [
         {
@@ -72,7 +75,8 @@ export default {
     },
 
     setKey: function(emittedKey) {
-      this.key = emittedKey;
+      this.key.num = emittedKey.num;
+      this.key.str = emittedKey.str;
     },
 
     setCurrentChord: function(emittedChord) {
@@ -95,7 +99,7 @@ export default {
     // or possibly do this in App.vue?
     requestFromBackend: function() {
       let body = [];
-      body.push(this.key);
+      body.push(this.key.num);
       body.push(this.mode);
       body.concat(this.currentChord.map((voice) => voice.noteInt));
       body.push(this.nextDegree);

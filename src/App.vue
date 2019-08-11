@@ -47,19 +47,14 @@ export default {
 }
 
 #display {
-  position: sticky;
-  top: 0;
-  background-color: white;
-  border-style: solid;
-  border-color: black;
-  border-width: 2px 2px 2px 2px;
-  border-radius: 6px;
-  z-index: 2;
   max-width: 360px;
   margin: auto;
 }
 
 #inputs {
+  overflow: auto;
+  width: 100%;
+  max-height: 250px;
   z-index: 1;
 }
 </style>

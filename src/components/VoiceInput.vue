@@ -72,7 +72,7 @@ export default {
       this.noteInt = this.convertNoteToInt(this.note);
       this.inRange = this.checkRange();
 
-      if (this.inRange) {
+      if (this.noteInt || this.noteInt === 0) {
         // send voice data
         this.$emit(
           'send:voice', 

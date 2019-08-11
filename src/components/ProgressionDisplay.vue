@@ -14,11 +14,16 @@ export default {
   props: {
     inputCurChord: {
       type: Array,
+    },
+    inputKey: {
+      type: String,
+      default: 'A',
     }
   },
 
   data() {
     return {
+      keySignature: 'A',
       context: null,
       cur: {
         chord: {
@@ -104,38 +109,74 @@ export default {
         }
       },
       deep: true,
-    }   
+    },
+
+    keySignature: {
+      function(val) {
+        console.log(val);
+        this.drawChord();
+      }
+    }
   },
   
   mounted() {
     this.cur.stave.treble = this.createStave('treble', 20, 10);
     this.cur.stave.bass = this.createStave('bass', 20, 120);
-    this.next.stave.treble = this.createStave('treble', 235, 10);
-    this.next.stave.bass = this.createStave('bass', 235, 120);
-    this.drawEmptySystem();
+    this.next.stave.treble = this.createStave('treble', 300, 10);
+    this.next.stave.bass = this.createStave('bass', 300, 120);
+    this.drawEmptySystem(true);
   }, 
   
   methods: {
     createStave: function(type, x, y) {
-      return new VF.Stave(x, y, 100).addClef(type);
+      return new VF.Stave(x, y, 200).addClef(type);
     },
 
     createContext: function() {
       let div = document.getElementById('display');
       let renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
-      renderer.resize(360, 250);  // (width, height)
+      renderer.resize(360, 200);  // (width, height)
       let context = renderer.getContext();
       context.setFont('Arial', 10, '');
+      context.scale(0.7, 0.7);
       return context;
     },
+
+    connectStaves: function(stave1, stave2) {
+      let connector = new VF.StaveConnector(stave1, stave2);
+      let line = new VF.StaveConnector(stave1, stave2);
+      connector.setType(VF.StaveConnector.type.BRACKET);
+      connector.setContext(this.context);
+      line.setType(VF.StaveConnector.type.SINGLE);
+      connector.setContext(this.context);
+      line.setContext(this.context);
+      connector.draw();
+      line.draw();
+    },
     
-    drawEmptySystem: function() {
+    drawEmptySystem: function(addKey) {
       this.cleanDisplay();
       this.context = this.createContext(); // NEW renderer/context
-      this.cur.stave.treble.setContext(this.context).draw();
-      this.cur.stave.bass.setContext(this.context).draw();
-      this.next.stave.treble.setContext(this.context).draw();
-      this.next.stave.bass.setContext(this.context).draw();
+      
+      if (this.keySignature && addKey) {
+        this.cur.stave.treble.addKeySignature(this.keySignature);
+        this.next.stave.treble.addKeySignature(this.keySignature);
+        this.cur.stave.bass.addKeySignature(this.keySignature);
+        this.next.stave.bass.addKeySignature(this.keySignature);
+      }
+
+      this.cur.stave.treble.setContext(this.context);      
+      this.cur.stave.bass.setContext(this.context);
+      this.next.stave.treble.setContext(this.context);      
+      this.next.stave.bass.setContext(this.context);
+      
+      this.cur.stave.treble.draw();
+      this.cur.stave.bass.draw();
+      this.next.stave.treble.draw();
+      this.next.stave.bass.draw();
+
+      this.connectStaves(this.cur.stave.treble, this.cur.stave.bass);
+      this.connectStaves(this.next.stave.treble, this.next.stave.bass);
     },  
 
     cleanDisplay: function() {
@@ -146,8 +187,8 @@ export default {
     },
 
     drawChord: function() {
-      this.drawEmptySystem();
-      let formatter = new VF.Formatter();   
+      this.drawEmptySystem(false);
+      let formatter = new VF.Formatter();      
       
       const voice_settings = {num_beats: 1, beat_value: 4};
       let voices = [];
@@ -201,3 +242,6 @@ export default {
   
 }
 </script>
+
+<style scoped>
+</style>

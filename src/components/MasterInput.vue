@@ -16,7 +16,13 @@
       @send:degree="setNextDegree"
       @send:inversion="setNextInversion"
       :disabled="disabled"/>
-    <b-button pill @click="requestFromBackend">Submit</b-button>
+    <b-button
+      pill 
+      id="button"
+      variant="primary"
+      @click="requestFromBackend">
+        Submit
+    </b-button>
   </b-container>
 </template>
 
@@ -77,6 +83,7 @@ export default {
     setKey: function(emittedKey) {
       this.key.num = emittedKey.num;
       this.key.str = emittedKey.str;
+      this.$emit('send:key-display', emittedKey.str);
     },
 
     setCurrentChord: function(emittedChord) {
@@ -119,5 +126,9 @@ export default {
 <style scoped>
 .sub {
   padding: 10px 10px 10px 10px;
+}
+
+#button {
+  margin-top: 20px;
 }
 </style>

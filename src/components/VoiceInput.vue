@@ -7,10 +7,11 @@
       :state="inputState"
       @input="handleInput"
       :disabled="disabled"/>
-    <div v-if="inRange === false">
-      <p>Note out of range.</p>
-      <p>Range is between {{ beginNote }} and {{ endNote }}.</p>
-    </div>
+    <small 
+      class="redtext"
+      v-show="inRange === false">
+        Range is between {{ beginNote }} and {{ endNote }}.
+    </small>
     <!-- <p>{{ noteInt }}</p> -->
   </div>
 </template>
@@ -72,8 +73,7 @@ export default {
       this.noteInt = this.convertNoteToInt(this.note);
       this.inRange = this.checkRange();
 
-      if (this.noteInt || this.noteInt === 0) {
-        // send voice data
+      // send voice data
         this.$emit(
           'send:voice', 
           {
@@ -82,8 +82,11 @@ export default {
             'noteInt': this.noteInt, 
             'inRange': this.inRange
           }
-        );  
-      }      
+        );
+
+      // if (this.noteInt || this.noteInt === 0) {
+          
+      // }      
       return;
     },
 
@@ -96,23 +99,23 @@ export default {
       if (!note) return null;
 
       const note_dict = {
-        'Cbb': -2,    'Cb': -1,    'C': 0,     'C#': 1,     'C##': 2,
-        'Dbb': 0,     'Db': 1,     'D': 2,     'D#': 3,     'D##': 4,
-        'Ebb': 2,     'Eb': 3,     'E': 4,     'E#': 5,     'E##': 6,
-        'Fbb': 3,     'Fb': 4,     'F': 5,     'F#': 6,     'F##': 7,
-        'Gbb': 5,     'Gb': 6,     'G': 7,     'G#': 8,     'G##': 9,
-        'Abb': 7,     'Ab': 8,     'A': 9,     'A#': 10,    'A##': 11,
-        'Bbb': 9,     'Bb': 10,    'B': 11,    'B#': 12,    'B##': 13
+        'cbb': -2,    'cb': -1,    'c': 0,     'c#': 1,     'c##': 2,
+        'dbb': 0,     'db': 1,     'd': 2,     'd#': 3,     'd##': 4,
+        'ebb': 2,     'eb': 3,     'e': 4,     'e#': 5,     'e##': 6,
+        'fbb': 3,     'fb': 4,     'f': 5,     'f#': 6,     'f##': 7,
+        'gbb': 5,     'gb': 6,     'g': 7,     'g#': 8,     'g##': 9,
+        'abb': 7,     'ab': 8,     'a': 9,     'a#': 10,    'a##': 11,
+        'bbb': 9,     'bb': 10,    'b': 11,    'b#': 12,    'b##': 13
       };      
 
       const octave = Number(note[note.length - 1]);
       const note_name = note.slice(0, note.length - 1);
 
-      if (isNaN(octave) || !(note_name in note_dict)) {
+      if (isNaN(octave) || !(note_name.toLowerCase() in note_dict)) {
         // unable to convert note
         return null;
       } else {
-        return note_dict[note_name] + (12 * octave);
+        return note_dict[note_name.toLowerCase()] + (12 * octave);
       }
     },
 
@@ -148,3 +151,9 @@ export default {
 
 }
 </script>
+
+<style scoped>
+.redtext {
+  color: #dc3545;
+}
+</style>

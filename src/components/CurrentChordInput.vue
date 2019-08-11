@@ -12,8 +12,16 @@
           :error-state="errorArr[voice.id]"
           :disabled="disabled"
           @send:voice="setVoice"/>
-        <p v-show=spacingErrorArr[index]>Spacing Error</p>
-        <p v-show=voiceOverlapArr[index]>Voice Overlap</p>
+        <small
+          class="redtext" 
+          v-show="spacingErrorArr[index]">
+            Spacing Error
+        </small>
+        <small 
+          class="redtext" 
+          v-show="voiceOverlapArr[index]">
+            Voice Overlap
+        </small>
       </b-col>
     </b-row>
   </b-container>
@@ -118,6 +126,7 @@ export default {
           return {
             'id': voice.id,
             'note': voice.note,
+            'noteInt': voice.noteInt,
             'err': this.errorArr[index],
           }
         } 
@@ -278,3 +287,8 @@ export default {
 }
 </script>
 
+<style scoped>
+.redtext {
+  color: #dc3545;
+}
+</style>

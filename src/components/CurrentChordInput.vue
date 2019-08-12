@@ -1,11 +1,11 @@
 <template>
   <b-container class="box">    
-    <b-row align-h="center">
+    <b-row align-h="center" class="subInput">
       <h4>Current Chord Voicings</h4>
     </b-row>    
 
-    <b-row 
-      align-h="center"
+    <b-row
+      align-h="end"
       v-for="(voice, index) in voiceInputs" 
       :key="voice.id">
       <b-col>
@@ -300,9 +300,18 @@ export default {
 }
 
 .subInput {
-  margin: auto;
+  margin-left: auto;
   margin-bottom: 25px;
   width: 100%;
   max-width: 400px;
+}
+
+@media only screen and (max-width: 660px) {
+  .subInput {
+    margin: auto;
+    margin-bottom: 25px;
+    width: 100%;
+    max-width: 400px;
+  }
 }
 </style>

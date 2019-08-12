@@ -29,19 +29,23 @@
 
     <b-row align-h="center">
       <b-col>
-        <b-button
-          pill 
-          id="button"
-          variant="primary"
-          @click="requestFromBackend"
-          :disabled="/*!ready ||*/ disabled">
-            Submit
-        </b-button>
         <p 
-          v-if="!ready && showError"
+          v-show="!ready && showError"
           class="redtext">
           Please fill out all fields.
         </p>
+        <b-button
+          pill 
+          id="myButton"
+          variant="primary"
+          @click="requestFromBackend"
+          v-show="!disabled">
+            Submit
+        </b-button>   
+        <b-spinner
+          id="mySpinner"
+          variant="primary" 
+          v-show="disabled"/>   
       </b-col>
     </b-row>
   </b-container>
@@ -188,7 +192,11 @@ export default {
   min-width: 300px;
 }
 
-#button {
+#myButton {
   margin-top: 20px;
+}
+
+#mySpinner {
+  margin-top: 25px;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <b-container>    
-    <b-row align-h="center">
+    <b-row align-h="center" class="selectInput">
       <h4>Next Chord Options</h4>
     </b-row>
 
@@ -98,8 +98,20 @@ export default {
 
 <style scoped>
 .selectInput {
-  margin: auto;
+  margin-right: auto;
   margin-bottom: 25px;
   max-width: 400px;
+}
+
+@media only screen and (max-width: 660px) {
+  .selectInput {
+    margin: auto;
+    margin-bottom: 25px;
+    max-width: 400px;
+  }
+
+  h4 {
+    margin: auto;
+  }
 }
 </style>

@@ -1,9 +1,9 @@
 <template>
   <b-container>
     <h4>Key Signature</h4>
-    <b-row align-h="center">
+    <b-row align-h="center" class="keyRow">
 
-      <b-col sm="2">
+      <b-col md class="selectInput">
         <label>Major / Minor</label>
         <b-form-select 
           v-model="selectedMode" 
@@ -12,7 +12,7 @@
           :disabled="disabled"/>
       </b-col>
 
-      <b-col sm="2">
+      <b-col md class="selectInput">
         <label>Key</label>
         <b-form-select 
           v-model="selectedKey" 
@@ -120,4 +120,15 @@ export default {
 
 }
 </script>
+
+<style scoped>
+.selectInput {
+  width: 100%;
+  max-width: 400px;
+}
+
+.keyRow {
+  padding-bottom: 25px;
+}
+</style>
 

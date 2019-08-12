@@ -1,26 +1,25 @@
 <template>
-  <b-container class="centered">
-    <h4>Next Chord Options</h4>
+  <b-container>    
     <b-row align-h="center">
+      <h4>Next Chord Options</h4>
+    </b-row>
 
-      <b-col sm="2">
-        <label>Degree</label>
-        <b-form-select
-          v-model="selectedDegree"
-          :options="degreeOptions[mode]"
-          @change="sendDegree"
-          :disabled="disabled"/>
-      </b-col>
+    <b-row align-h="center" class="selectInput">
+      <label>Degree</label>
+      <b-form-select
+        v-model="selectedDegree"
+        :options="degreeOptions[mode]"
+        @change="sendDegree"
+        :disabled="disabled"/>
+    </b-row>
 
-      <b-col sm="2">
-        <label>Inversion</label>
-        <b-form-select
-          v-model="selectedInversion"
-          :options="inversionOptions"
-          @change="sendInversion"
-          :disabled="disabled"/>
-      </b-col>
-
+    <b-row align-h="center" class="selectInput">
+      <label>Inversion</label>
+      <b-form-select
+        v-model="selectedInversion"
+        :options="inversionOptions"
+        @change="sendInversion"
+        :disabled="disabled"/>
     </b-row>
   </b-container>
 </template>
@@ -98,7 +97,9 @@ export default {
 </script>
 
 <style scoped>
-.centered {
+.selectInput {
   margin: auto;
+  margin-bottom: 25px;
+  max-width: 400px;
 }
 </style>

@@ -61,7 +61,8 @@ export default {
 <style>
 @import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
 #app {
-  width: 100vw;
+  width: 100%;
+  min-width: 360px;
   height: 100vh;
   /* font-family: 'Avenir', Helvetica, Arial, sans-serif; */
   font-family: 'Roboto', sans-serif;
@@ -87,8 +88,9 @@ export default {
   margin: auto;
   height: calc(50vh + 25%);
   overflow: auto;
-  width: 100%;
   z-index: 1;
   padding-bottom: 20px;
+  /* border: 5px solid #2c3e50;
+  border-radius: 6px 6px 0px 0px; */
 }
 </style>

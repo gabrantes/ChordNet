@@ -1,29 +1,49 @@
 <template>
-  <b-container>
-    <KeyInput 
-      class="sub" 
-      @send:key="setKey"
-      @send:mode="setMode"
-      :disabled="disabled"/>
-    <CurrentChordInput
-      class="sub"
-      @send:chord="setCurrentChord"
-      @send:chord-display="sendCurChordDisplay"
-      :disabled="disabled"/>
-    <NextChordOptions
-      class="sub"
-      :mode="this.mode"
-      @send:degree="setNextDegree"
-      @send:inversion="setNextInversion"
-      :disabled="disabled"/>
-    <b-button
-      pill 
-      id="button"
-      variant="primary"
-      @click="requestFromBackend"
-      :disabled="!ready || disabled">
-        Submit
-    </b-button>
+  <b-container fluid>
+    <b-row align-h="center" class="justify-content-md-center">
+      <KeyInput 
+        class="sub" 
+        @send:key="setKey"
+        @send:mode="setMode"
+        :disabled="disabled"/>
+    </b-row>
+    <br/>
+    <b-row align-h="center" class="justify-content-md-center">
+      <b-col col lg>
+        <CurrentChordInput
+          class="sub doubleColumn"
+          @send:chord="setCurrentChord"
+          @send:chord-display="sendCurChordDisplay"
+          :disabled="disabled"/>
+      </b-col>
+
+      <b-col col lg>
+        <NextChordOptions
+          class="sub doubleColumn"
+          :mode="this.mode"
+          @send:degree="setNextDegree"
+          @send:inversion="setNextInversion"
+          :disabled="disabled"/>
+      </b-col>
+    </b-row>
+
+    <b-row align-h="center">
+      <b-col>
+        <b-button
+          pill 
+          id="button"
+          variant="primary"
+          @click="requestFromBackend"
+          :disabled="/*!ready ||*/ disabled">
+            Submit
+        </b-button>
+        <p 
+          v-if="!ready && showError"
+          class="redtext">
+          Please fill out all fields.
+        </p>
+      </b-col>
+    </b-row>
   </b-container>
 </template>
 
@@ -76,6 +96,7 @@ export default {
       nextDegree: null,      
       nextSeventh: null,
       nextInversion: null,
+      showError: false,
     }
   },
 
@@ -109,6 +130,10 @@ export default {
 
     // or possibly do this in App.vue?
     requestFromBackend: function() {
+      if (!this.ready) {
+        this.showError = true;
+        return;
+      }
       let body = [];
       body.push(this.key.num);
       body.push(this.mode);
@@ -126,6 +151,9 @@ export default {
     ready: function() {
       let ready = true;
       for (let key in this.$data) {
+        if (key === 'showError') {
+          continue;
+        }
         if (key === 'key') {
           ready = ready && (!!this.key.num || this.key.num === 0) && !!this.key.str;
           continue;
@@ -146,8 +174,18 @@ export default {
 </script>
 
 <style scoped>
+.redtext {
+  color: #dc3545;
+  padding-top: 10px;
+}
+
 .sub {
-  padding: 10px 10px 10px 10px;
+  margin-top: 10px;
+  padding: 10px 20px 10px 20px;
+}
+
+.doubleColumn {
+  min-width: 300px;
 }
 
 #button {

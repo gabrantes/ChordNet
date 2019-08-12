@@ -4,6 +4,7 @@ node_modules
 
 # icon files
 *.ico
+*.png
 !favicon.ico
 
 # local env files

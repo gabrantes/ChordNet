@@ -1,9 +1,16 @@
 <template>
-  <b-container>
-    <h4>Current Chord Voicings</h4>
+  <b-container class="box">    
     <b-row align-h="center">
-      <b-col v-for="(voice, index) in voiceInputs" :key="voice.id" sm="2">
+      <h4>Current Chord Voicings</h4>
+    </b-row>    
+
+    <b-row 
+      align-h="center"
+      v-for="(voice, index) in voiceInputs" 
+      :key="voice.id">
+      <b-col>
         <VoiceInput
+          class="subInput"
           :id="voice.id"
           :label="voice.label"
           :placeholder="voice.placeholder"
@@ -290,5 +297,12 @@ export default {
 <style scoped>
 .redtext {
   color: #dc3545;
+}
+
+.subInput {
+  margin: auto;
+  margin-bottom: 25px;
+  width: 100%;
+  max-width: 400px;
 }
 </style>

@@ -2,6 +2,7 @@
   <div>
     <label v-if="label">{{ label }}</label>
     <b-form-input 
+      class="vInput"
       v-model="note"
       :placeholder="placeholder"
       :state="inputState"
@@ -155,5 +156,9 @@ export default {
 <style scoped>
 .redtext {
   color: #dc3545;
+}
+
+.vInput {
+  width: 100%;
 }
 </style>

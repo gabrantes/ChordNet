@@ -18,6 +18,7 @@ export default {
 @import url('https://fonts.googleapis.com/css?family=Poppins&display=swap');
 #bar {
   background-image: linear-gradient( 135deg, #79F1A4 10%, #0E5CAD 100%);  
+  /* background-image: linear-gradient( 135deg, #0E5CAD 10%, #F44336 100%) */
 }
 
 #title {

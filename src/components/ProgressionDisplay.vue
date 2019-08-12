@@ -96,17 +96,22 @@ export default {
 
     inputCurChord: {
       handler(val) {
+        // !!!
+        // MODULARIZE / GENERALIZE ME FOR inputNextChord
+        // !!!
         const voice_dict = {0: 'soprano', 1: 'alto', 2: 'tenor', 3: 'bass'};
         for (let voice of val) {
-          const key = voice_dict[voice.id];
+          const voiceKey = voice_dict[voice.id];
           if (voice.noteInt) {
             // if valid note
             const note = voice.note.slice(0, -1) + '/' + voice.note.slice(-1);
-            this.cur.chord[key].note.keys = [note];
+            this.cur.chord[voiceKey].note.keys = [note];
           } else {
-            this.cur.chord[key].note.keys = null;
+            this.cur.chord[voiceKey].note.keys = null;
           }
-          this.cur.chord[key].err = voice.err;
+          if (voice.err) {
+            this.cur.chord[voiceKey].err = voice.err;
+          }          
         }
       },
       deep: true,
@@ -121,7 +126,7 @@ export default {
   },
   
   mounted() {    
-    this.drawEmptySystem(true);
+    this.drawEmptySystem();
   }, 
   
   methods: {
@@ -157,16 +162,14 @@ export default {
       line.draw();
     },
     
-    drawEmptySystem: function(addKey) {
+    drawEmptySystem: function() {
       this.cleanDisplay();
       this.context = this.createContext(); // NEW renderer/context
-      
-      if (this.keySignature && addKey) {
-        this.cur.stave.treble.addKeySignature(this.keySignature);
-        this.next.stave.treble.addKeySignature(this.keySignature);
-        this.cur.stave.bass.addKeySignature(this.keySignature);
-        this.next.stave.bass.addKeySignature(this.keySignature);
-      }
+
+      this.cur.stave.treble.addKeySignature(this.keySignature);
+      this.next.stave.treble.addKeySignature(this.keySignature);
+      this.cur.stave.bass.addKeySignature(this.keySignature);
+      this.next.stave.bass.addKeySignature(this.keySignature);
 
       this.cur.stave.treble.setContext(this.context);      
       this.cur.stave.bass.setContext(this.context);
@@ -190,31 +193,22 @@ export default {
     },
 
     drawChord: function() {
-      this.drawEmptySystem(true);
-      let formatter = new VF.Formatter();      
+      this.drawEmptySystem();
+      let formatter = new VF.Formatter();            
       
-      const voice_settings = {num_beats: 1, beat_value: 4};
       let trebleVoices = [];
       let bassVoices = [];
       let voices = [];
       
-      for (let voice in this.cur.chord) {
-        if (this.cur.chord[voice]['note']['keys'] !== null) {
-          let staveVoice = new VF.Voice(voice_settings);
-          const note = this.createNote(this.cur.chord[voice]);
-          staveVoice.addTickables([note]);
+      const curVoices = this.createVoicesFromChord(this.cur.chord);
+      trebleVoices = trebleVoices.concat(curVoices.treble);
+      bassVoices = bassVoices.concat(curVoices.bass);
+      voices = voices.concat(curVoices.all);
 
-          if (voice === 'soprano' || voice === 'alto') {
-            staveVoice.setStave(this.cur.stave.treble);
-            trebleVoices.push(staveVoice);
-          }
-          if (voice === 'tenor' || voice === 'bass') {
-            staveVoice.setStave(this.cur.stave.bass);
-            bassVoices.push(staveVoice);
-          }          
-          voices.push(staveVoice);
-        }
-      }
+      const nextVoices = this.createVoicesFromChord(this.next.chord);
+      trebleVoices = trebleVoices.concat(nextVoices.treble);
+      bassVoices = bassVoices.concat(nextVoices.bass);
+      voices = voices.concat(nextVoices.all);
       
       if (voices.length > 0) {
         VF.Accidental.applyAccidentals(voices, this.keySignature);
@@ -231,6 +225,38 @@ export default {
           voice.setContext(this.context).draw();
         }
       }
+    },
+
+    createVoicesFromChord: function(chordObject) {
+      let voices = [];
+      let trebleVoices = [];
+      let bassVoices = [];
+
+      const voice_settings = {num_beats: 1, beat_value: 4};
+
+      for (let voice in chordObject) {
+        if (chordObject[voice]['note']['keys'] !== null) {
+          let staveVoice = new VF.Voice(voice_settings);
+          const note = this.createNote(chordObject[voice]);
+          staveVoice.addTickables([note]);
+
+          if (voice === 'soprano' || voice === 'alto') {
+            staveVoice.setStave(this.cur.stave.treble);
+            trebleVoices.push(staveVoice);
+          }
+          if (voice === 'tenor' || voice === 'bass') {
+            staveVoice.setStave(this.cur.stave.bass);
+            bassVoices.push(staveVoice);
+          }          
+          voices.push(staveVoice);
+        }
+      }
+
+      return {
+        'all': voices,
+        'treble': trebleVoices,
+        'bass': bassVoices
+      };
     },
 
     createNote: function(voiceObject) {

@@ -9,26 +9,30 @@
       v-for="(voice, index) in voiceInputs" 
       :key="voice.id">
       <b-col>
-        <VoiceInput
-          class="subInput"
-          :id="voice.id"
-          :label="voice.label"
-          :placeholder="voice.placeholder"
-          :begin-note="voice.beginNote"
-          :end-note="voice.endNote"
-          :error-state="errorArr[voice.id]"
-          :disabled="disabled"
-          @send:voice="setVoice"/>
-        <small
-          class="redtext" 
-          v-show="spacingErrorArr[index]">
-            Spacing Error
-        </small>
-        <small 
-          class="redtext" 
-          v-show="voiceOverlapArr[index]">
-            Voice Overlap
-        </small>
+        <div class="inputGroup">
+          <VoiceInput
+            class="subInput"
+            :id="voice.id"
+            :label="voice.label"
+            :placeholder="voice.placeholder"
+            :begin-note="voice.beginNote"
+            :end-note="voice.endNote"
+            :error-state="errorArr[voice.id]"
+            :disabled="disabled"
+            @send:voice="setVoice"/>
+          <div class="messages">
+            <small
+              class="redtext" 
+              v-show="spacingErrorArr[index]">
+                Spacing Error
+            </small>
+            <small 
+              class="redtext" 
+              v-show="voiceOverlapArr[index]">
+                Voice Overlap
+            </small>
+          </div>
+        </div>
       </b-col>
     </b-row>
   </b-container>
@@ -299,9 +303,17 @@ export default {
   color: #dc3545;
 }
 
+.messages {
+  margin-left: auto;
+  max-width: 400px;
+}
+
+.inputGroup {
+  margin-bottom: 25px;
+}
+
 .subInput {
   margin-left: auto;
-  margin-bottom: 25px;
   width: 100%;
   max-width: 400px;
 }
@@ -309,8 +321,12 @@ export default {
 @media only screen and (max-width: 660px) {
   .subInput {
     margin: auto;
-    margin-bottom: 25px;
     width: 100%;
+    max-width: 400px;
+  }
+
+  .messages {
+    margin: auto;
     max-width: 400px;
   }
 }

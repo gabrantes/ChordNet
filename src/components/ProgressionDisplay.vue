@@ -96,9 +96,6 @@ export default {
 
     inputCurChord: {
       handler(val) {
-        // !!!
-        // MODULARIZE / GENERALIZE ME FOR inputNextChord
-        // !!!
         const voice_dict = {0: 'soprano', 1: 'alto', 2: 'tenor', 3: 'bass'};
         for (let voice of val) {
           const voiceKey = voice_dict[voice.id];

@@ -138,16 +138,16 @@ export default {
         this.showError = true;
         return;
       }
-      let body = [];
-      body.push(this.key.num);
-      body.push(this.mode);
-      body = body.concat(this.currentChord.map((voice) => voice.noteInt));
-      body.push(this.nextDegree);
-      body.push(this.nextSeventh);
-      body.push(this.nextInversion);
+      let modelInputs = [];
+      modelInputs.push(this.key.num);
+      modelInputs.push(this.mode);
+      modelInputs = modelInputs.concat(this.currentChord.map((voice) => voice.noteInt));
+      modelInputs.push(this.nextDegree);
+      modelInputs.push(this.nextSeventh);
+      modelInputs.push(this.nextInversion);
       
       // send [body] to the backend API
-      this.$emit('request:backend', [body]);
+      this.$emit('request:backend', modelInputs);
     }
   },
 

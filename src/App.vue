@@ -15,6 +15,7 @@
 </template>
 
 <script>
+// import axios from 'axios'
 import MyNavBar from './components/MyNavBar.vue'
 import ProgressionDisplay from './components/ProgressionDisplay.vue'
 import MasterInput from './components/MasterInput.vue'
@@ -45,13 +46,32 @@ export default {
       this.keyStr = keyStr;
     },
 
-    requestBackend: function(req) {
+    requestBackend: function(modelInputs) {
       this.disableInputs = true;
+      console.log(modelInputs);
 
-      // simulate timing
+      // simulate backend request
       setTimeout(() => {this.disableInputs = false;}, 2000);
 
-      // TODO: send req to backend
+      /* AXIOS
+      const url = 'https://ml.googleapis.com/v1/projects/chordnet-backend/models/chordnet_verbose/versions/slim_custom_v6:predict';
+      const reqBody = {
+        'instances': [
+          modelInputs
+        ]
+      };
+      
+      axios.post(url, reqBody)
+        .then(response => {
+          console.log(response);
+          this.disableInputs = false;
+          })
+        .catch(e => {
+          console.log(e);
+          this.disableInputs = false;
+          });
+      */
+
       return;
     }
   }

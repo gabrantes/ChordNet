@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="main">
     <ProgressionDisplay
       id="display"
       :inputCurChord="curChordDisplay"
@@ -85,7 +85,7 @@ export default {
 
 <style>
 @import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
-#app {
+#main {
   width: 100%;
   min-width: 360px;
   height: 100vh;
@@ -114,7 +114,5 @@ export default {
   overflow: auto;
   z-index: 1;
   padding-bottom: 20px;
-  /* border: 5px solid #2c3e50;
-  border-radius: 6px 6px 0px 0px; */
 }
 </style>

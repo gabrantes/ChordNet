@@ -1,7 +1,26 @@
 <template>
-  <div>
-    <div id="display"/>
-  </div>  
+  <b-container id="box">
+    <!-- <b-row class="justify-content-md-center" no-gutters>
+      <b-col no-gutters>
+        <label 
+          id="leftText"
+          class="displayLabel">
+          Current Chord
+        </label>
+      </b-col>
+
+      <b-col no-gutters>
+        <label 
+          id="rightText" 
+          class="displayLabel">
+          Predicted Chord
+        </label>
+      </b-col>
+    </b-row> -->
+
+    <div id="svgGoesInHere">
+    </div>
+  </b-container>  
 </template>
 
 <script>
@@ -160,10 +179,12 @@ export default {
   
   methods: {
     cleanDisplay: function() {
-      let div = document.getElementById('display');
-      while (div.firstChild) {
-        div.removeChild(div.firstChild);
-      }
+      let div = document.getElementById('svgGoesInHere');
+      if (div.hasChildNodes()) {
+        while (div.firstChild) {
+          div.removeChild(div.firstChild);
+        }
+      }      
     },
 
     createStave: function(type, x, y) {
@@ -171,7 +192,7 @@ export default {
     },
 
     createContext: function() {
-      let div = document.getElementById('display');
+      let div = document.getElementById('svgGoesInHere');
 
       let renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
       renderer.resize(360, 200);  // (width, height)
@@ -181,10 +202,10 @@ export default {
       context.scale(0.7, 0.7);
 
       // create all staves
-      this.cur.stave.treble = this.createStave('treble', 20, 10);
-      this.cur.stave.bass = this.createStave('bass', 20, 120);
-      this.next.stave.treble = this.createStave('treble', 300, 10);
-      this.next.stave.bass = this.createStave('bass', 300, 120);
+      this.cur.stave.treble = this.createStave('treble', 5, 10);
+      this.cur.stave.bass = this.createStave('bass', 5, 120);
+      this.next.stave.treble = this.createStave('treble', 285, 10);
+      this.next.stave.bass = this.createStave('bass', 285, 120);
 
       return context;
     },
@@ -300,4 +321,12 @@ export default {
 </script>
 
 <style scoped>
+#box {
+  height: 200px;
+  background-color: #eed !important;
+}
+
+#svgGoesInHere {
+  margin: auto;
+}
 </style>

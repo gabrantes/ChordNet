@@ -1,5 +1,5 @@
 module.exports = {
-  devServer: {
-    proxy: 'https://chordnet-backend.herokuapp.com/',
-  }
+  publicPath: process.env.NODE_ENV === 'production'
+    ? '/chordnet/'
+    : '/'
 }

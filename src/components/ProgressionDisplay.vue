@@ -20,13 +20,12 @@ export default {
     },
     keySignature: {
       type: String,
-      default: 'A',
+      default: 'C',
     }
   },
 
   data() {
     return {
-      // keySignature: 'A',
       context: null,
       cur: {
         chord: {
@@ -107,6 +106,7 @@ export default {
     inputCurChord: {
       handler(val) {
         const voice_dict = {0: 'soprano', 1: 'alto', 2: 'tenor', 3: 'bass'};
+        let invalid = false;
         for (let voice of val) {
           const voiceKey = voice_dict[voice.id];
           if (voice.noteInt) {
@@ -115,9 +115,19 @@ export default {
             this.cur.chord[voiceKey].note.keys = [note];
           } else {
             this.cur.chord[voiceKey].note.keys = null;
+            invalid = true;
           }
+
           if (voice.err !== null) {
             this.cur.chord[voiceKey].err = voice.err;
+            invalid = true;
+          }
+
+          if (invalid) {
+            // reset next-chord-display
+            for (let voice in this.next.chord) {
+              this.next.chord[voice].note.keys = null;
+            }
           }          
         }
       },

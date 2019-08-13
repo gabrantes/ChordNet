@@ -36,6 +36,11 @@ export default {
     }
   },
 
+  mounted() {
+    // wake up the (possibly sleeping) Heroku backend
+    axios.get('api/wakeup');
+  },
+
   methods: {
     toCurDisplay: function(curChordDisplay) {
       this.curChordDisplay = curChordDisplay;

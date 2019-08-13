@@ -7,7 +7,7 @@
         </router-link>
       </b-navbar-brand>
 
-      <b-navbar-nav class="ml-auto navText">
+      <b-navbar-nav class="ml-auto navText" id="aboutText">
         <router-link to="/about">
           About
         </router-link>
@@ -34,5 +34,9 @@ export default {
 
 #title {  
   font-size: 2rem;
+}
+
+#aboutText {
+  font-size: 1.25rem;
 }
 </style>

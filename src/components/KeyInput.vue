@@ -4,7 +4,7 @@
     <b-row align-h="center" class="keyRow">
 
       <b-col md class="selectInput">
-        <label>Major / Minor</label>
+        <label>Mode</label>
         <b-form-select 
           v-model="selectedMode" 
           :options="modeOptions"

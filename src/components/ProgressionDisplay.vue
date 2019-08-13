@@ -116,7 +116,7 @@ export default {
           } else {
             this.cur.chord[voiceKey].note.keys = null;
           }
-          if (voice.err) {
+          if (voice.err !== null) {
             this.cur.chord[voiceKey].err = voice.err;
           }          
         }
@@ -180,15 +180,15 @@ export default {
     },
 
     connectStaves: function(stave1, stave2) {
-      let connector = new VF.StaveConnector(stave1, stave2);      
-      connector.setType(VF.StaveConnector.type.BRACKET);
-      connector.setContext(this.context);
+      let bracket = new VF.StaveConnector(stave1, stave2);      
+      bracket.setType(VF.StaveConnector.type.BRACKET);
+      bracket.setContext(this.context);
 
       let line = new VF.StaveConnector(stave1, stave2);
       line.setType(VF.StaveConnector.type.SINGLE);
       line.setContext(this.context);
 
-      connector.draw();
+      bracket.draw();
       line.draw();
     },
     

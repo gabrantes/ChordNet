@@ -19,6 +19,13 @@ import axios from 'axios'
 import ProgressionDisplay from './ProgressionDisplay.vue'
 import MasterInput from './MasterInput.vue'
 
+const axiosInstance = axios.create({
+  baseURL: 'https://chordnet-backend.herokuapp.com/',
+  timeout: 10000,
+  headers: {'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'}
+});
+
 export default {
   name: 'HomePage',
 
@@ -38,7 +45,7 @@ export default {
 
   mounted() {
     // wake up the (possibly sleeping) Heroku backend
-    axios.get('api/wakeup');
+    axiosInstance.get('api/wakeup');
   },
 
   methods: {
@@ -60,7 +67,7 @@ export default {
         ]
       };
       
-      axios.post(url, reqBody)
+      axiosInstance.post(url, reqBody)
         .then(response => {
           this.nextChordDisplay = response.data.predictions[0];
           this.disableInputs = false;

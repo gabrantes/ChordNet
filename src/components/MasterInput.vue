@@ -27,7 +27,7 @@
       </b-col>
     </b-row>
 
-    <b-row align-h="center">
+    <b-row align-h="center" class="buttonRow">
       <b-col>
         <p 
           v-show="!ready && showError"
@@ -75,6 +75,7 @@ export default {
         str: 'C',
       },
       mode: 1,
+      currentChordIsValid: null,
       currentChord: [
         {
           id: 0,
@@ -115,8 +116,9 @@ export default {
       this.$emit('send:key-display', emittedKey.str);
     },
 
-    setCurrentChord: function(emittedChord) {
-      this.currentChord = emittedChord;
+    setCurrentChord: function(emitted) {
+      this.currentChord = emitted.chord;
+      this.currentChordIsValid = emitted.valid;
     },
 
     setNextDegree: function(emittedDegree) {
@@ -192,11 +194,11 @@ export default {
   min-width: 300px;
 }
 
-#myButton {
+.buttonRow {
   margin-top: 20px;
 }
 
 #mySpinner {
-  margin-top: 25px;
+  margin-top: 5px;
 }
 </style>

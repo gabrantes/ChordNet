@@ -144,23 +144,17 @@ export default {
       )
       this.$emit('send:chord-display', chordDisplay);
 
-      if (this.allEntered()) {
-        if (this.validate()) {
-          // get only relevant chord data
-          const chord = this.voices.map(
-            (voice) => {
-              return {
-                'id': voice.id,
-                'note': voice.note,
-                'noteInt': voice.noteInt
-                };
-            }
-          );
-
-          // send chord data
-          this.$emit('send:chord', chord);
+      const chord = this.voices.map(
+        (voice) => {
+          return {
+            'id': voice.id,
+            'note': voice.note,
+            'noteInt': voice.noteInt
+            };
         }
-      }
+      );
+      let valid = this.allEntered() && this.validate();
+      this.$emit('send:chord', {'chord': chord, 'valid': valid});
     },
 
     /**

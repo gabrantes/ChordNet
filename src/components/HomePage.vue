@@ -3,7 +3,7 @@
     <ProgressionDisplay
       id="display"
       :inputCurChord="curChordDisplay"
-      :inputNextChord="nextChordDispay"
+      :inputNextChord="nextChordDisplay"
       :keySignature="keyStr"/>
     <MasterInput 
       :disabled="disableInputs"
@@ -47,10 +47,6 @@ export default {
 
     requestBackend: function(modelInputs) {
       this.disableInputs = true;
-      console.log(modelInputs);
-
-      // simulate backend request
-      // setTimeout(() => {this.disableInputs = false;}, 2000);
 
       const url = 'api/predict';
       const reqBody = {
@@ -61,8 +57,7 @@ export default {
       
       axios.post(url, reqBody)
         .then(response => {
-          console.log(response.data);
-          this.nextChordDisplay = response.data;
+          this.nextChordDisplay = response.data.predictions[0];
           this.disableInputs = false;
           })
         .catch(e => {

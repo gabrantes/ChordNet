@@ -1,30 +1,44 @@
 <template>
   <div id="app">
     <MyNavBar class="shadow"/>
-    <HomePage />
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
 import MyNavBar from './components/MyNavBar.vue'
-import HomePage from './components/HomePage.vue'
 
 export default {
   name: 'app',
 
   components: {
     MyNavBar,
-    HomePage,
   },
 }
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: 'Roboto', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
+}
+
+nav a {  
+  color: white;
+}
+
+nav a:hover {  
+  color: white;
+}
+
+nav .router-link-active {
+  color: white;
+}
+
+nav .router-link-exact-active {
+  color: white;
 }
 </style>

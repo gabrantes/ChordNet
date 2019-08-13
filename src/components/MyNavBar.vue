@@ -1,9 +1,17 @@
 <template>
   <div>
     <b-navbar id="bar" type="dark">
-      <b-navbar-brand tag="h1" id="title">
-        <b>CHORD</b>NET
+      <b-navbar-brand tag="h1" class="navText" id="title">
+        <router-link to="/">
+          <b>CHORD</b>NET
+        </router-link>
       </b-navbar-brand>
+
+      <b-navbar-nav class="ml-auto navText">
+        <router-link to="/about">
+          About
+        </router-link>
+      </b-navbar-nav>      
     </b-navbar>
   </div>
 </template>
@@ -20,8 +28,11 @@ export default {
   background-image: linear-gradient( 135deg, #79F1A4 10%, #0E5CAD 100%);
 }
 
-#title {
+.navText {
   font-family: 'Poppins', sans-serif;
+}
+
+#title {  
   font-size: 2rem;
 }
 </style>

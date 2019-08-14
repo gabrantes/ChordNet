@@ -40,6 +40,10 @@ export default {
     keySignature: {
       type: String,
       default: 'C',
+    },
+    resetToggle: {
+      type: Boolean,
+      default: false,
     }
   },
 
@@ -108,6 +112,13 @@ export default {
   },
 
   watch: {
+    resetToggle: {
+      handler() {
+        this.clearNextDisplay();
+      },
+      deep: true,
+    },
+
     curChord: {
       handler() {
         this.drawSystem();
@@ -144,9 +155,7 @@ export default {
 
           if (invalid) {
             // reset next-chord-display
-            for (let voice in this.next.chord) {
-              this.next.chord[voice].note.keys = null;
-            }
+            this.clearNextDisplay();
           }          
         }
       },
@@ -178,6 +187,12 @@ export default {
   }, 
   
   methods: {
+    clearNextDisplay: function() {
+      for (let voice in this.next.chord) {
+        this.next.chord[voice].note.keys = null;
+      }
+    },
+
     cleanDisplay: function() {
       let div = document.getElementById('svgGoesInHere');
       if (div.hasChildNodes()) {

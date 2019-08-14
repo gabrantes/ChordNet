@@ -4,12 +4,14 @@
       id="display"
       :inputCurChord="curChordDisplay"
       :inputNextChord="nextChordDisplay"
-      :keySignature="keyStr"/>
+      :keySignature="keyStr"
+      :resetToggle="resetToggle"/>
     <MasterInput 
       :disabled="disableInputs"
       @send:cur-chord-display="toCurDisplay"
       @send:key-display="toKeyDisplay"
       @request:backend="requestBackend"
+      @reset:next-display="handleReset"
       id="inputs"/>
   </div>
 </template>
@@ -41,6 +43,7 @@ export default {
       nextChordDisplay: null,
       keyStr: 'C',
       disableInputs: false,
+      resetToggle: false,
     }
   },
 
@@ -50,6 +53,10 @@ export default {
   },
 
   methods: {
+    handleReset: function() {
+      this.resetToggle= !this.resetToggle;
+    },
+
     toCurDisplay: function(curChordDisplay) {
       this.curChordDisplay = curChordDisplay;
     },

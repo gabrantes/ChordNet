@@ -108,29 +108,35 @@ export default {
   methods: {
     setMode: function(emittedMode) {
       this.mode = emittedMode;
+      this.$emit('reset:next-display');
     },
 
     setKey: function(emittedKey) {
       this.key.num = emittedKey.num;
       this.key.str = emittedKey.str;
+      this.$emit('reset:next-display');
       this.$emit('send:key-display', emittedKey.str);
     },
 
     setCurrentChord: function(emitted) {
       this.currentChord = emitted.chord;
       this.currentChordIsValid = emitted.valid;
+      this.$emit('reset:next-display');
     },
 
     setNextDegree: function(emittedDegree) {
       this.nextDegree = emittedDegree;
+      this.$emit('reset:next-display');
     },
 
     setNextInversion: function(emitted) {
       this.nextInversion = emitted.inv;
       this.nextSeventh = emitted.sev;
+      this.$emit('reset:next-display');
     },
 
     sendCurChordDisplay: function(chordDisplay) {
+      this.$emit('reset:next-display');
       this.$emit('send:cur-chord-display', chordDisplay);
     },
 

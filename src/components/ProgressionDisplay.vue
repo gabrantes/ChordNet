@@ -202,10 +202,10 @@ export default {
       context.scale(0.7, 0.7);
 
       // create all staves
-      this.cur.stave.treble = this.createStave('treble', 5, 10);
-      this.cur.stave.bass = this.createStave('bass', 5, 120);
-      this.next.stave.treble = this.createStave('treble', 285, 10);
-      this.next.stave.bass = this.createStave('bass', 285, 120);
+      this.cur.stave.treble = this.createStave('treble', 20, 10);
+      this.cur.stave.bass = this.createStave('bass', 20, 120);
+      this.next.stave.treble = this.createStave('treble', 300, 10);
+      this.next.stave.bass = this.createStave('bass', 300, 120);
 
       return context;
     },
@@ -323,10 +323,10 @@ export default {
 <style scoped>
 #box {
   height: 200px;
-  background-color: #eed !important;
 }
 
 #svgGoesInHere {
-  margin: auto;
+  margin: 0;
+  padding: 0;
 }
 </style>

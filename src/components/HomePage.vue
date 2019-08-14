@@ -86,8 +86,6 @@ export default {
 <style scoped>
 @import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
 #main {
-  width: 100%;
-  min-width: 360px;
   height: 100vh;
   font-family: 'Roboto', sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -105,7 +103,7 @@ export default {
   max-width: 360px;
   margin: auto;
   margin-top: 10px;
-  border-radius: 6px;
+  padding: 0;
 }
 
 #inputs {

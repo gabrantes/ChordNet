@@ -308,14 +308,12 @@ export default {
 
 .subInput {
   margin-left: auto;
-  width: 100%;
   max-width: 400px;
 }
 
 @media only screen and (max-width: 660px) {
   .subInput {
     margin: auto;
-    width: 100%;
     max-width: 400px;
   }
 

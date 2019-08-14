@@ -145,7 +145,6 @@ export default {
 
 <style scoped>
 .selectInput {
-  width: 100%;
   max-width: 400px;
 }
 

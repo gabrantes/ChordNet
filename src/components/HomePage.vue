@@ -1,5 +1,5 @@
 <template>
-  <div id="main">
+  <div id="main" class="animated fadeIn faster">
     <ProgressionDisplay
       id="display"
       :inputCurChord="curChordDisplay"
@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import 'animate.css'
 import axios from 'axios'
 import ProgressionDisplay from './ProgressionDisplay.vue'
 import MasterInput from './MasterInput.vue'

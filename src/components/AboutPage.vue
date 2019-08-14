@@ -1,5 +1,5 @@
 <template>
-  <div class="aboutPage">
+  <div class="aboutPage animated fadeIn faster">
     <h1>About</h1>
     <hr>
 
@@ -66,6 +66,8 @@
 </template>
 
 <script>
+import 'animate.css'
+
 export default {
   name: 'AboutPage',
 }
